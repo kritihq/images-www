@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Kriti Directory | No code directory builder</title>
+    <link href="/kriti-normalize-modern.css" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: "Inter", serif;
+      }
+      h1, h2 {
+        font-family: "Bricolage Grotesque", sans-serif;
+        margin: 8px 0;
+      }
+      nav {
+        padding: 12px;
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        justify-content: space-between;
+      }
+      main, nav {
+        width: 70%;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      section {
+        padding: 1rem 0;
+        margin: 5rem 0;
+
+        & h2 {
+          margin: 24px 0;
+
+          &+ p {
+            margin: 0 0 48px 0;
+          }
+        }
+      }
+      ul {
+        list-style: disc outside;
+        padding: 0;
+      }
+
+      a {
+        &:hover {
+          font-style: italic;
+        }
+      }
+      button, a.btn-like {
+        border: none;
+        background: none;
+        padding: 8px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+
+        &:hover {
+          background: #bbb;
+          font-style: normal;
+        }
+      }
+      button.primary {
+        background-color: cornflowerblue;
+
+        &:hover {
+          background-color: #4a86f0;
+        }
+      }
+
+      figure {
+        & img {
+          border-radius: 8px;
+        }
+      }
+      @media (width < 1024px) {
+        main, nav {
+          width: 80%;
+        }
+
+        section {
+          margin: 2rem 24px;
+        }
+      }
+      @media (width < 768px) {
+        main, nav {
+          width: 100%;
+        }
+      }
+
+      #hero {
+        & .features {
+          padding: 0;
+          margin: 24px 0;
+          list-style: url('data:image/svg+xml;utf-8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check"><path d="M20 6 9 17l-5-5"/></svg>') inside;
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+          gap: 24px;
+
+          & li::marker {
+            padding: 12px;
+          }
+        }
+      }
+      @media (width < 1024px) {
+        #hero {
+          & .features {
+            /*display: block;*/
+          }
+        }
+      }
+      @media (width < 768px) {
+        #hero {
+          & .features {
+            display: block;
+            text-align: left;
+          }
+        }
+      }
+
+      #benefits {
+        text-align: center;
+
+        & .benefits {
+          text-align: left;
+          list-style: none;
+          padding: 0;
+          margin: 24px 0;
+
+          & li article {
+            display: flex;
+            flex-flow: row wrap;
+            align-items: stretch;
+            justify-content: space-between;
+            gap: 12px;
+            margin: 128px 0;
+
+            & h3 { flex: 1 0 50%; }
+            & figure { flex: 1 0 40%; }
+          }
+        }
+      }
+      @media (width < 1024px) {
+        #benefits {
+          & .benefits {
+          }
+        }
+      }
+      @media (width < 768px) {
+        #benefits {
+          & .benefits {
+            & li article {
+              flex-flow: column-reverse wrap;
+              gap: 48px;
+            }
+          }
+        }
+      }
+
+      #how {
+        text-align: center;
+
+        & ol {
+          text-align: left;
+          list-style: none;
+          padding: 0;
+          margin: 24px 0;
+          display: flex;
+          flex-flow: row wrap;
+          align-items: stretch;
+          justify-content: space-between;
+          gap: 24px;
+
+          & li {
+            flex: 1 0 30%;
+
+            & article h3 {
+              margin: 12px 0 24px 0;
+            }
+          }
+        }
+      }
+      @media (width < 1024px) {
+        #how {
+        }
+      }
+      @media (width < 768px) {
+        #how {
+          & ol {
+            flex-flow: column;
+            gap: 48px;
+          }
+        }
+      }
+
+      #pricing {
+        text-align: center;
+
+        &> ul {
+          text-align: left;
+          list-style: none;
+          padding: 0;
+          margin: 24px 0;
+          display: flex;
+          flex-flow: row wrap;
+          justify-content: space-evenly;
+          align-items: flex-start;
+
+          &> li {
+            flex: 0 0 30%;
+            border: 1px dashed #bbb;
+            border-radius: 8px;
+
+            &:nth-child(1) {
+              border: 2px solid cornflowerblue;
+              background-color: #6495ed0d;
+            }
+
+            &> article {
+              padding: 24px;
+
+              & h3 {
+                margin: 12px 0 24px 0;
+              }
+
+              & ul {
+                list-style: disc inside;
+                padding: 48px 0 24px 0;
+              }
+            }
+          }
+        }
+
+        & button {
+          width: 100%;
+          background: #6495ed45;
+          padding: 12px;
+          margin: 24px 0;
+        }
+      }
+      @media (width < 1024px) {
+        #pricing {
+        }
+      }
+      @media (width < 768px) {
+        #pricing {
+          &> ul {
+            flex-flow: column;
+            margin: 12px 0;
+            gap: 12px;
+            align-items: center;
+
+            & li article ul {
+              margin: 0;
+              padding: 8px 0;
+            }
+          }
+
+          & button {
+            margin: 8px 0;
+          }
+        }
+      }
+
+      #faqs {
+        text-align: center;
+
+        &> details {
+          text-align: left;
+          padding: 0;
+          margin: 24px 0 48px 0;
+
+          &> summary h3 {
+            display: inline;
+            margin: 24px;
+          }
+
+          &> p {
+            margin: 24px 0 24px 48px;
+          }
+        }
+      }
+      @media (width < 1024px) {
+        #faqs {
+        }
+      }
+      @media (width < 768px) {
+        #faqs {
+        }
+      }
+
+      #cta-2 {
+        text-align: center;
+        border: 2px dashed cornflowerblue;
+        border-radius: 12px;
+        padding: 48px;
+
+        &> h2 {
+          margin: 0;
+          padding: 0;
+        }
+
+        &> button {
+          margin-top: 24px;
+          padding: 12px;
+          width: fit-content;
+        }
+      }
+      @media (width < 1024px) {
+        #cta-2 {
+        }
+      }
+      @media (width < 768px) {
+        #cta-2 {
+          padding: 12px;
+        }
+      }
+
+      footer {
+        min-height: 50vh;
+        padding: 48px 15%;
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+        align-items: baseline;
+
+        & section {
+          margin: 1rem 24px;
+        }
+
+        & ul {
+          list-style: none;
+        }
+      }
+      @media (width < 1024px) {
+        footer {
+          min-height: fit-content;
+          gap: 48px;
+          gap: 48px;
+
+          &> section:first-child {
+            order: 3;
+            flex: 1 0 100%;
+          }
+
+          &> section {
+            margin: 0;
+            padding: 0;
+          }
+        }
+      }
+      @media (width < 768px) {
+        footer {
+          padding: 12px;
+          flex-flow: column-reverse;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+        <nav>
+            <p style="margin: 0; padding: 0;"><a href="/" style="text-decoration: none;"><span style="font-family: Lora;">Kriti/ </span>Directory</a></p>
+            <a href="https://dashboard.kriti.directory/auth" style="text-decoration: none;">Login</a>
+        </nav>
+        <div style="background: lightblue; border: 1px solid skyblue; width: 100%; padding: 8px; text-align: center;">
+            <p><span style="font-weight: bold;">Introducing: </span>pSEO (part 1): Dynamic Meta tags</p>
+        </div>
+    </header>
+    <main>
+      <section id="hero" style="display: flex; flex-flow: column; align-items: center; text-align: center; margin: 0px;">
+        <h1 style="margin-top: 48px;">Publish directories from Excel<br><mark style="padding: 0 12px; border-radius: 8px;">No code, in Minutes</mark></h1>
+        <ul class="features">
+          <li>Drag & drop builder</li>
+          <li>Import xlsx file</li>
+          <li>Multiple collections</li>
+          <li>Custom domain</li>
+          <li>pSEO</li>
+        </ul>
+        <!--<button type="button" class="primary" onclick="document.getElementById('dialog-login').showModal();" style="margin: 48px 0; width: fit-content; padding: 12px;">Grab 14 day free trial</button>-->
+        <video controls controlslist="nodownload disablepictureinpicture" style="border: 12px solid #6495ed24; border-radius: 12px; width: 70vw; margin: 24px 0; box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;">
+          <source src="/assets/demo2.webm" type="video/webm"/>
+        </video>
+      </section>
+      <section id="benefits">
+        <h2 style="text-align: center;">Features</h2>
+        <p style="text-align: center;">This ain't your regular Wordpress site. We designed <b>Kriti Directory</b> to make it easy to publish directory sites.<br/>All features are built precisely around this ideology.</p>
+        <ul class="benefits">
+          <li><article>
+            <h3><span style="color: blue;">Save time &amp; money.</span> Stop fighting CMS &amp; work directly in your favourite spreadsheet editor while we handle the servers.</h3>
+            <figure>
+              <img src="/assets/spreadsheets.webp" alt="Work with any spreadsheet editor" width="100%">
+              <figcaption>Work with any spreadsheet editor</figcaption>
+            </figure>
+          </article></li>
+          <li><article>
+            <h3><span style="color: blue;">F<i>aaaaaaaaa</i>st</span>. Every request optimised to be served in seconds.</h3>
+            <figure>
+              <img src="/assets/performance.png" alt="Performance screenshot" width="100%" style="border: 2px solid grey;">
+              <figcaption>I am speed</figcaption>
+            </figure>
+          </article></li>
+          <li><article>
+            <h3><span style="color: blue;">Your brand, your style.</span> Don't rely on templates. Design your own page as your brand sees fit.</h3>
+            <figure>
+              <img src="/assets/design-with-intention.png" alt="Style every element" width="100%">
+              <figcaption>Style every element</figcaption>
+            </figure>
+          </article></li>
+        </ul>
+      </section>
+      <section id="how">
+        <h2>How?</h2>
+        <ol>
+          <li><article>
+            <p>Step 1</p>
+            <h3>Import</h3>
+            <figure>
+              <img src="/assets/import.png" alt="Import dialog" width="100%">
+              <figcaption>Import your collections and listings. Any columns any data.</figcaption>
+            </figure>
+          </article></li>
+          <li><article>
+            <p>Step 2</p>
+            <h3>Customize</h3>
+            <figure>
+              <img src="/assets/studio-elements-2.png" alt="Design studio" width="100%">
+              <figcaption><p>Design your site, from home page to 404 and everything in between.</p></figcaption>
+            </figure>
+          </article></li>
+          <li><article>
+            <p>Step 3</p>
+            <h3>Publish</h3>
+            <figure>
+              <img src="/assets/new-directory-2.png" alt="Design studio" width="100%">
+              <figcaption><p>Publish your work, attach your custom domain and relax.</p></figcaption>
+            </figure>
+          </article></li>
+        </ol>
+        <h2></h2>
+      </section>
+      <section id="pricing">
+        <h2>Transparent pricing</h2>
+        <p>No hidden cost (we hate that sh*t). Billed monthly.</p>
+        <ul>
+          <!--<li><article>-->
+          <!--  <p>Starter</p>-->
+          <!--  <h3>$19/site</h3>-->
+          <!--  <button type="button">Subscribe</button>-->
+          <!--  <ul>-->
+          <!--    <li>Upto 4 collections</li>-->
+          <!--    <li>Upto 1000 listings/collection</li>-->
+          <!--    <li>Free SSL</li>-->
+          <!--    <li>Custom domains</li>-->
+          <!--    <li>No watermark</li>-->
+          <!--    <li>Email support</li>-->
+          <!--  </ul>-->
+          <!--</article></li>-->
+          <li><article>
+            <p>Basic</p>
+            <h3>$19/month</h3>
+            <!--<button type="button">Subscribe</button>-->
+            <ul>
+              <li>Upto 4 collections</li>
+              <li>Upto 1000 listings/collection</li>
+              <li>Free SSL</li>
+              <li>Custom domains</li>
+              <li>No watermark</li>
+              <li>Email support</li>
+            </ul>
+          </article></li>
+        </ul>
+      </section>
+      <section id="faqs">
+        <h2>Do you have these questions?</h2>
+        <details>
+          <summary><h3>Do I need to/know how to code?</h3></h3></summary>
+          <p>No, Its a no code platform, just drag-drop stuff onto editor and click save.</p>
+        </details>
+        <details>
+          <summary><h3>Is there a free tier?</h3></summary>
+          <p>Unfortunately not, we don't share server amongst sites, which provides benefits but also incur cost. <b>What we can provide is a free trial period of 7 days.</b> Cancel anytime.</p>
+        </details>
+        <details>
+          <summary><h3>Custom domains?</h3></summary>
+          <p>Yes it is possible to attach your own domain, its your directory afterall.</p>
+        </details>
+        <details>
+          <summary><h3>Missed a question?</h3></summary>
+          <p>We are not telepathic afterall. Contact us via <a href="mailto:admin@kriti.blog">email</a> or <a href="">X (twitter)</a></p>
+        </details>
+      </section>
+      <!--<section id="cta-2">-->
+      <!--  <h2>Have spreadsheet at ready?</h2>-->
+      <!--  <button type="button">Publish it right now</button>-->
+      <!--</section>-->
+    </main>
+    <footer>
+      <section>
+        <h2 style="margin: 0; padding: 0;"><span style="font-family: Lora;">Kriti/ </span>Directory</h2>
+        <small>Engineered by Vinay</small>
+      </section>
+      <section style="display: flex; flex-flow: column; gap: 12px;">
+        <h3>Product</h3>
+        <p><a href="#pricing">Pricing</a></p>
+        <p><a href="/privacy-policy.html" target="_blank">Privacy Policy</a></p>
+        <p><a href="/terms-of-service.html" target="_blank">Terms of Service</a></p>
+        <p><a href="/refund-policy.html" target="_blank">Refund Policy</a></p>
+      </section>
+      <section style="display: flex; flex-flow: column; gap: 12px;">
+        <h3>Contact</h3>
+        <a href="mailto:vinay.gaykar+kriti_dir@proton.me">Email</a>
+        <a href="https://x.com/vinay_gaykar">X (twitter)</p>
+      </section>
+    </footer>
+  </body>
+</html>

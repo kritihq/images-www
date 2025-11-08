@@ -1,0 +1,11 @@
+baseURL = 'https://kriti.directory/'
+languageCode = 'en-us'
+title = 'Kriti/ Directory'
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true
+
+[caches]
+  [caches.images]
+    dir = ':cacheDir/images'

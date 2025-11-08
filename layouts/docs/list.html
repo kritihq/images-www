@@ -1,0 +1,52 @@
+{{ define "main" }}
+<main
+    class="w-3/4 w-max-[1080px] max-lg:w-[96%] mx-auto grid grid-cols-1fr auto-rows-min border-x border-x-zinc-400/40"
+>
+    <nav aria-label="breadcrumbs" class="px-2 py-2">
+        <ul id="breadcrumbs">
+            {{- range $k, $v := .Ancestors.Reverse }} {{- if (gt $k 0) }}
+            <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+            {{- end }} {{- end }}
+            <li class="text-slate-500 breadcrumb-curr">{{ .LinkTitle }}</li>
+        </ul>
+    </nav>
+    <article class="bg-zinc-100 rounded-md border-t border-t-zinc-400/20">
+        <h1 class="p-8 max-sm:p-2 max-lg:p-4">{{ .Title }}</h1>
+        <nav
+            aria-label="quick links"
+            class="w-3/4 max-lg:w-full mx-auto p-8 max-sm:p-2"
+        >
+            <p class="mb-8 text-sm text-blue-600 uppercase">Guides</p>
+            <menu
+                class="list-none grid grid-cols-3 max-sm:grid-cols-1 gap-8 auto-rows-fr rounded-md"
+            >
+                {{ range (where .Site.RegularPages.ByTitle "Section" "docs") }}
+                <li
+                    class="min-h-[150px] p-2 hover:bg-zinc-300/20 hover:scale-105 border border-zinc-400/20 rounded-md animate-[slideUp_0.5s_ease-out_1_both]"
+                >
+                    <a
+                        href="{{ .Permalink }}"
+                        class="h-full w-full inline-block"
+                    >
+                        <h3 class="text-lg text-slate-600 decoration-none">
+                            {{ .Params.title | humanize | title }}
+                        </h3>
+                        {{ with .Params.description }}
+                        <p class="text-sm text-shadow-slate-400">
+                            {{ . | humanize | title }}
+                        </p>
+                        {{ end }}
+                    </a>
+                </li>
+                {{ end }}
+            </menu>
+        </nav>
+        <section
+            id="content"
+            class="w-max-[75%] max-sm:px-4 p-8 borer-x border-zinc-400/40 rounded-b-md text-balanced col-start-1 row-start-2"
+        >
+            {{ .Content }}
+        </section>
+    </article>
+</main>
+{{ end }}
