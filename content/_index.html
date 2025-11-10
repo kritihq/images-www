@@ -12,173 +12,209 @@
     <p id="dialogMessage" class="text-lg"></p>
 </dialog>
 
-<section class="bg-zinc-100 pt-24 pb-24 px-24 max-lg:px-4">
-    <h1 class="text-5xl max-lg:text-3xl text-balance text-blue-600 col-span-2">
+<section class="bg-zinc-100 p-8 md:py-24 px-4 lg:px-24">
+    <h1
+        class="pb-8 text-5xl max-lg:text-3xl text-balance text-blue-600 col-span-2"
+    >
         Optimize &amp; Transform Images - Easily at Scale
     </h1>
 
-    <p class="w-2/3 max-lg:w-full text-slate-700 text-left text-balance py-8">
-        Dynamically generate multiple variants of any image all in a single
-        platform. Whether its for web or mobile, JPG or WEBP, round edges or
-        grayscale from any source image we got you covered.
-    </p>
+    <div class="flex flex-col-reverse lg:flex-row gap-8">
+        <div class="md:basis-2/3 grow shrink-0">
+            <p class="text-slate-700 text-left text-balance">
+                Dynamically generate multiple variants of any image all in a
+                single platform. Whether its for web or mobile, JPG or WEBP,
+                round edges or grayscale from any source image we got you
+                covered.
+            </p>
 
-    <form
-        id="waitlistForm"
-        class="w-1/2 max-lg:w-full flex flex-row gap-4"
-        method="post"
-        action="https://waitlist.kritiimages.com/api/v1/waitlist"
-    >
-        <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="Enter your email"
-            class="px-4 py-2 rounded-md border border-zinc-300 focus:outline-none focus:border-blue-500"
-            required=""
-        />
-        <button
-            type="submit"
-            class="bg-blue-700 border border-blue-700 px-4 py-2 rounded-md text-slate-50 hover:bg-blue-800 text-sm"
-        >
-            Join the Waitlist
-        </button>
-    </form>
-    <script>
-        document
-            .getElementById("waitlistForm")
-            .addEventListener("submit", async function (e) {
-                e.preventDefault();
+            <ul class="mt-8 md:mt-4 text-slate-700">
+                <li class="list-none mb-2">✨ Transform with URL parameters</li>
+                <li class="list-none mb-2">
+                    🚀 Optimize for faster loading pages
+                </li>
+                <li class="list-none mb-2">📱 Resize images for any device</li>
+                <li class="list-none mb-2">
+                    🎨 Adjust brightness, contrast, and more
+                </li>
+                <li class="list-none mb-2">
+                    ⚡ Real-time transformations &amp; CDN-powered delivery
+                </li>
+            </ul>
 
-                const email = document.getElementById("email").value;
-                const dialog = document.getElementById("submissionDialog");
-                const dialogMessage = document.getElementById("dialogMessage");
+            <form
+                id="waitlistForm"
+                class="mt-12 flex flex-col md:flex-row gap-2"
+                method="post"
+                action="https://waitlist.kritiimages.com/api/v1/waitlist"
+            >
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter your email"
+                    class="px-4 py-2 rounded-md border border-zinc-300 focus:outline-none focus:border-blue-500"
+                    required=""
+                />
+                <button
+                    type="submit"
+                    class="bg-blue-700 border border-blue-700 px-4 py-2 rounded-md text-slate-50 hover:bg-blue-800 text-sm"
+                >
+                    Join the Waitlist
+                </button>
+            </form>
+            <script>
+                document
+                    .getElementById("waitlistForm")
+                    .addEventListener("submit", async function (e) {
+                        e.preventDefault();
 
-                try {
-                    const response = await fetch(this.action, {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify({ email: email }),
+                        const email = document.getElementById("email").value;
+                        const dialog =
+                            document.getElementById("submissionDialog");
+                        const dialogMessage =
+                            document.getElementById("dialogMessage");
+
+                        try {
+                            const response = await fetch(this.action, {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({ email: email }),
+                            });
+
+                            if (response.ok) {
+                                dialogMessage.textContent =
+                                    "Thank you for joining our waitlist!";
+                                dialog.showModal();
+                                this.reset(); // Clear the form
+                            } else {
+                                dialogMessage.textContent =
+                                    "Could not submit. Please try again later.";
+                                dialog.showModal();
+                            }
+                        } catch (error) {
+                            dialogMessage.textContent =
+                                "Could not submit. Please try again later.";
+                            dialog.showModal();
+                        }
                     });
-
-                    if (response.ok) {
-                        dialogMessage.textContent =
-                            "Thank you for joining our waitlist!";
-                        dialog.showModal();
-                        this.reset(); // Clear the form
-                    } else {
-                        dialogMessage.textContent =
-                            "Could not submit. Please try again later.";
-                        dialog.showModal();
-                    }
-                } catch (error) {
-                    dialogMessage.textContent =
-                        "Could not submit. Please try again later.";
-                    dialog.showModal();
+            </script>
+        </div>
+        <div class="md:basis-1/3 md:grow-0 shrink-0 max-md:max-w-[70vw]">
+            <style>
+                #hero-animate img {
+                    transition: all 0.5s ease-in-out;
                 }
-            });
-    </script>
 
-    <style>
-        #hero-animate img {
-            transition: all 0.5s ease-in-out;
-        }
+                #hero-animate p::after {
+                    position: absolute;
+                    animation: cursor-blink 1s step-end infinite;
+                }
+                @keyframes cursor-blink {
+                    50% {
+                        opacity: 0;
+                    }
+                }
+            </style>
+            <div id="hero-animate" class="w-full">
+                <img
+                    id="hero-image"
+                    class="w-full h-full"
+                    src="/assets/images/index/kritiimages_pexels-gabin-cobret-430175667-32948694.webp"
+                />
+                <p
+                    class="mt-2 min-h-1 font-mono text-sm md:text-base after:content-['_|'] after:absolute text-left md:text-center text-balance"
+                ></p>
+            </div>
+            <script>
+                function animateHero() {
+                    const heroImage = document.getElementById("hero-image");
+                    const textElement =
+                        document.querySelector("#hero-animate p");
+                    const baseText = "/tr:";
+                    const transforms = [
+                        { style: {}, text: "height=400" },
+                        {
+                            style: { filter: "contrast(0.5)" },
+                            text: ";contrast=50",
+                        },
+                        {
+                            style: { borderRadius: "50%" },
+                            text: ";radius=100%",
+                        },
+                    ];
+                    let currentIndex = 0;
 
-        #hero-animate p::after {
-            position: absolute;
-            animation: cursor-blink 1s step-end infinite;
-        }
-        @keyframes cursor-blink {
-            50% {
-                opacity: 0;
-            }
-        }
-    </style>
-    <div id="hero-animate" class="w-full flex flex-row gap-4">
-        <p
-            class="basis-1/2 h-[50px] mt-2 min-h-1 font-mono after:content-['_|'] after:absolute text-center"
-        ></p>
-        <div class="basis-[40%] h-[400px]">
-            <img
-                src="/assets/images/index/kritiimages-pexels-gabin-cobret-430175667-32948694-crop.jpg"
-                class="h-[400px]"
-                id="hero-image"
-            />
+                    async function typeText(newText, keepPrefix = "") {
+                        if (keepPrefix) {
+                            textElement.textContent = keepPrefix;
+                        }
+                        for (let char of newText) {
+                            textElement.textContent += char;
+                            await new Promise((resolve) =>
+                                setTimeout(resolve, 50),
+                            );
+                        }
+                    }
+
+                    async function showNext() {
+                        // Apply style to image
+                        Object.assign(
+                            heroImage.style,
+                            transforms[currentIndex].style,
+                        );
+
+                        // Clear text when cycling back to first frame
+                        if (currentIndex === 0) {
+                            textElement.textContent = "";
+                        }
+
+                        // Type next text
+                        const prefix =
+                            currentIndex === 0 ? "" : textElement.textContent;
+                        await typeText(
+                            currentIndex === 0
+                                ? baseText + transforms[currentIndex].text
+                                : transforms[currentIndex].text,
+                            prefix,
+                        );
+
+                        // Wait before next cycle
+                        await new Promise((resolve) =>
+                            setTimeout(resolve, 1000),
+                        );
+
+                        // Reset styles before next transition
+                        if (currentIndex === transforms.length - 1) {
+                            heroImage.style.filter = "";
+                            heroImage.style.borderRadius = "";
+                        }
+
+                        // Update index
+                        currentIndex = (currentIndex + 1) % transforms.length;
+                    }
+
+                    // Start animation cycle
+                    async function animate() {
+                        while (true) {
+                            await showNext();
+                        }
+                    }
+
+                    animate();
+                }
+
+                document.addEventListener("DOMContentLoaded", animateHero);
+            </script>
         </div>
     </div>
-    <script>
-        function animateHero() {
-            const heroImage = document.getElementById("hero-image");
-            const textElement = document.querySelector("#hero-animate p");
-            const baseText = "tr:";
-            const transforms = [
-                { style: {}, text: "height=400" },
-                { style: { filter: "contrast(0.5)" }, text: ";contrast=50" },
-                { style: { borderRadius: "50%" }, text: ";radius=100%" },
-            ];
-            let currentIndex = 0;
-
-            async function typeText(newText, keepPrefix = "") {
-                if (keepPrefix) {
-                    textElement.textContent = keepPrefix;
-                }
-                for (let char of newText) {
-                    textElement.textContent += char;
-                    await new Promise((resolve) => setTimeout(resolve, 50));
-                }
-            }
-
-            async function showNext() {
-                // Apply style to image
-                Object.assign(heroImage.style, transforms[currentIndex].style);
-
-                // Clear text when cycling back to first frame
-                if (currentIndex === 0) {
-                    textElement.textContent = "";
-                }
-
-                // Type next text
-                const prefix =
-                    currentIndex === 0 ? "" : textElement.textContent;
-                await typeText(
-                    currentIndex === 0
-                        ? baseText + transforms[currentIndex].text
-                        : transforms[currentIndex].text,
-                    prefix,
-                );
-
-                // Wait before next cycle
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-
-                // Reset styles before next transition
-                if (currentIndex === transforms.length - 1) {
-                    heroImage.style.filter = "";
-                    heroImage.style.borderRadius = "";
-                }
-
-                // Update index
-                currentIndex = (currentIndex + 1) % transforms.length;
-            }
-
-            // Start animation cycle
-            async function animate() {
-                while (true) {
-                    await showNext();
-                }
-            }
-
-            animate();
-        }
-
-        document.addEventListener("DOMContentLoaded", animateHero);
-    </script>
 </section>
 <hr class="h-6 w-[200vw] relative -left-[50%] border-y border-zinc-400/40" />
-<section class="bg-zinc-100 px-12 pt-4 pb-24 max-lg:px-4 text-start">
+<section class="bg-zinc-100 px-4 lg:px-12 pt-4 pb-24 text-start">
     <h2 class="text-3xl text-blue-600 mt-12">Optimise for any screen</h2>
-    <p class="w-1/2 max-lg:w-full mt-6 mb-6 text-slate-700 text-balance">
+    <p class="w-full lg:w-1/2 mt-6 mb-6 text-slate-700 text-balance">
         Transform your images for any device or screen size with our powerful
         resize and cropping options. From mobile thumbnails to desktop banners,
         deliver the perfect image size every time using simple URL parameters.
@@ -192,7 +228,7 @@
     />
 </section>
 <hr class="h-6 w-[200vw] relative -left-[50%] border-y border-zinc-400/40" />
-<section class="bg-zinc-100 px-12 pt-4 pb-24 max-lg:px-4 text-start">
+<section class="bg-zinc-100 px-4 lg:px-12 pt-4 pb-24 text-start">
     <h2 class="text-3xl text-blue-600 mt-12">
         Improve bounce rate, load pages faster
     </h2>
@@ -209,7 +245,7 @@
     />
 </section>
 <hr class="h-6 w-[200vw] relative -left-[50%] border-y border-zinc-400/40" />
-<section class="bg-zinc-100 px-12 pt-4 pb-24 max-lg:px-4 text-start">
+<section class="bg-zinc-100 px-4 lg:px-12 pt-4 pb-24 text-start">
     <h2 class="text-3xl text-blue-600 mt-12">Easy to integrate</h2>
     <p class="w-1/2 max-lg:w-full mt-6 mb-6 text-slate-700 text-balance">
         Transform images on-the-fly using simple URL parameters - no complex
@@ -224,13 +260,13 @@
     />
 </section>
 <hr class="h-6 w-[200vw] relative -left-[50%] border-y border-zinc-400/40" />
-<section class="bg-zinc-100 px-12 pt-4 pb-24 max-lg:px-4 text-start">
+<section class="bg-zinc-100 px-4 lg:px-12 pt-4 pb-24 text-start">
     <h2 class="text-3xl text-blue-600 mt-12">Features</h2>
 
-    <ol class="w-[90%] mx-auto mt-8">
+    <ol class="w-full lg:w-[90%] mx-auto mt-8">
         <li id="f_item_1" class="list-none min-h-12">
             <details
-                class="text-start w-full h-full px-4 py-2 cursor-pointer"
+                class="text-start w-full h-full lg:px-4 py-2 cursor-pointer"
                 onclick="showoffFeature(0)"
                 open=""
             >
@@ -242,7 +278,7 @@
                 </p>
                 <img
                     id="f_img_1"
-                    class="rounded-md border border-zinc-400 w-[60%] mx-auto mt-8"
+                    class="rounded-md border border-zinc-400 lg:w-[60%] mx-auto mt-8"
                     src="/assets/images/index/kritiimages_resize-crop-and-corner.png"
                     alt="A cat cropped to profile picture dimensions"
                 />
@@ -250,7 +286,7 @@
         </li>
         <li id="f_item_2" class="list-none min-h-12 mt-8">
             <details
-                class="text-start w-full h-full px-4 py-2 cursor-pointer"
+                class="text-start w-full h-full lg:px-4 py-2 cursor-pointer"
                 onclick="showoffFeature(1)"
             >
                 <summary class="text-xl mb-2 list-none before:content-['+']">
@@ -262,7 +298,7 @@
                 </p>
                 <img
                     id="f_img_2"
-                    class="rounded-md border border-zinc-400 w-[60%] mx-auto mt-8"
+                    class="rounded-md border border-zinc-400 lg:w-[60%] mx-auto mt-8"
                     src="/assets/images/index/kritiimages_format-and-quality.png"
                     alt="Reduce file size from original image"
                 />
@@ -270,7 +306,7 @@
         </li>
         <li id="f_item_3" class="list-none min-h-12 mt-8">
             <details
-                class="text-start w-full h-full px-4 py-2 cursor-pointer"
+                class="text-start w-full h-full lg:px-4 py-2 cursor-pointer"
                 onclick="showoffFeature(2)"
             >
                 <summary class="text-xl mb-2 list-none before:content-['+']">
@@ -281,7 +317,7 @@
                 </p>
                 <img
                     id="f_img_3"
-                    class="rounded-md border border-zinc-400 w-[60%] mx-auto mt-8"
+                    class="rounded-md border border-zinc-400 lg:w-[60%] mx-auto mt-8"
                     src="/assets/images/index/kritiimages_rotate-and-flip.png"
                     alt="Rotate and flip a cat it will land on its legs"
                 />
@@ -289,7 +325,7 @@
         </li>
         <li id="f_item_4" class="list-none min-h-12 mt-8">
             <details
-                class="text-start w-full h-full px-4 py-2 cursor-pointer"
+                class="text-start w-full h-full lg:px-4 py-2 cursor-pointer"
                 onclick="showoffFeature(3)"
             >
                 <summary class="text-xl mb-2 list-none before:content-['+']">
@@ -300,7 +336,7 @@
                 </p>
                 <img
                     id="f_img_4"
-                    class="rounded-md border border-zinc-400 w-[60%] mx-auto mt-8"
+                    class="rounded-md border border-zinc-400 lg:w-[60%] mx-auto mt-8"
                     src="/assets/images/index/kritiimages_image-adjustments.png"
                     alt="Examples of brightness, contrast, sharpen and blur"
                 />
@@ -317,16 +353,18 @@
             }
         }
     </script>
-    <h3 class="w-[90%] mx-auto mt-12 mb-8 text-sm italic">And much more ...</h3>
+    <h3 class="lg:w-[90%] mx-auto mt-12 mb-8 text-sm italic">
+        And much more ...
+    </h3>
     <ul
         id="features-list"
-        class="mx-auto w-[90%] max-sm:w-full list-none! grid grid-cols-4 grid-rows-2 max-sm:grid-cols-2 text-pretty"
+        class="mx-auto w-full lg:w-[90%] list-none! grid grid-cols-2 lg:grid-cols-4 auto-rows-fr text-sm md:text-base text-pretty"
     >
-        <li class="p-4 border-r border-b border-zinc-400/40">
+        <li class="px-2 md:px-4 py-4 border-zinc-400/40 border-r border-b">
             <h4>
                 Corner Radius
                 <span
-                    class="ml-2 px-2 py-0.5 bg-blue-200/40 border border-blue-400 rounded-4xl text-xs"
+                    class="inline-block w-fit md:ml-2 px-2 py-0.5 bg-blue-200/40 border border-blue-400 rounded-4xl text-xs"
                 >
                     new
                 </span>
@@ -335,35 +373,39 @@
                 Smooth corners or just circular profile pictures
             </p>
         </li>
-        <li class="p-4 border-r border-b border-zinc-400/40">
+        <li class="px-2 md:p-4 py-4 border-zinc-400/40 lg:border-r border-b">
             <h4 class="">Scale Down</h4>
             <p class="mt-2 text-sm text-slate-500 italic">
                 Contain, Cover, Crop, Pad, Squeeze or Scaledown
             </p>
         </li>
-        <li class="p-4 border-r border-b border-zinc-400/40">
+        <li class="px-2 md:p-4 py-4 border-zinc-400/40 border-r border-b">
             <h4>Scale Up</h4>
             <p class="mt-2 text-sm text-slate-500 italic">
                 Add background color to extra padding
             </p>
         </li>
-        <li class="p-4 border-b border-zinc-400/40">
+        <li class="px-2 md:p-4 py-4 border-zinc-400/40 border-b">
             <h4>Image format</h4>
             <p class="mt-2 text-sm text-slate-500 italic">
                 Interchange between JPEG, PNG or WebP
             </p>
         </li>
-        <li class="p-4 border-r border-zinc-400/40">
+        <li
+            class="px-2 md:p-4 py-4 border-zinc-400/40 border-b lg:border-b-0 border-r"
+        >
             <h4>Blur</h4>
             <p class="mt-2 text-sm text-slate-500 italic">
                 Hide sensitive data :shush:
             </p>
         </li>
-        <li class="p-4 border-r border-zinc-400/40 text-slate-500">
+        <li
+            class="px-2 md:p-4 py-4 border-zinc-400/40 border-b lg:border-b-0 lg:border-r text-slate-500"
+        >
             <h4>
                 Templates & Presets
                 <span
-                    class="ml-2 px-2 py-0.5 bg-orange-200/40 border border-orange-400 rounded-4xl text-xs text-slate-900"
+                    class="inline-block md:ml-2 px-2 py-0.5 bg-orange-200/40 border border-orange-400 rounded-4xl text-xs text-slate-900"
                 >
                     planned
                 </span>
@@ -372,11 +414,11 @@
                 Auto generate images for different social media using presets
             </p>
         </li>
-        <li class="p-4 border-r border-zinc-400/40 text-slate-500">
+        <li class="px-2 md:p-4 py-4 border-r border-zinc-400/40 text-slate-500">
             <h4>
                 Text Overlay
                 <span
-                    class="ml-2 px-2 py-0.5 bg-orange-200/40 border border-orange-400 rounded-4xl text-xs text-slate-900"
+                    class="inline-block w-fit md:ml-2 px-2 py-0.5 bg-orange-200/40 border border-orange-400 rounded-4xl text-xs text-slate-900"
                 >
                     planned
                 </span>
@@ -385,7 +427,7 @@
                 Add dynamic overlay text or static watermark
             </p>
         </li>
-        <li class="p-4 border-0">
+        <li class="px-2 md:p-4 py-4 border-0">
             <h4>
                 <a
                     href="/docs/transformations"
