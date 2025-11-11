@@ -102,7 +102,7 @@
                     });
             </script>
         </div>
-        <div class="md:basis-1/3 md:grow-0 shrink-0 max-md:max-w-[70vw]">
+        <div class="md:basis-1/3 md:grow-0 shrink-0 max-w-[70vw] lg:max-w-full">
             <style>
                 #hero-animate img {
                     transition: all 0.5s ease-in-out;
@@ -266,14 +266,16 @@
     <ol class="w-full lg:w-[90%] mx-auto mt-8">
         <li id="f_item_1" class="list-none min-h-12">
             <details
-                class="text-start w-full h-full lg:px-4 py-2 cursor-pointer"
+                class="group text-start w-full h-full lg:px-4 py-4 cursor-pointer border open:border-0 border-zinc-200 rounded-md"
                 onclick="showoffFeature(0)"
                 open=""
             >
-                <summary class="text-xl mb-2 list-none before:content-['+']">
+                <summary
+                    class="text-xl list-none before:content-['+'] group-open:before:content-['_-']"
+                >
                     Resize, Crop &amp; Cut Corners
                 </summary>
-                <p class="text-slate-500 text-sm text-pretty">
+                <p class="mt-4 px-4 text-slate-500 text-sm text-pretty">
                     Change image dimensions and resize behaviour
                 </p>
                 <img
@@ -284,15 +286,17 @@
                 />
             </details>
         </li>
-        <li id="f_item_2" class="list-none min-h-12 mt-8">
+        <li id="f_item_2" class="list-none min-h-12 mt-4">
             <details
-                class="text-start w-full h-full lg:px-4 py-2 cursor-pointer"
+                class="group text-start w-full h-full lg:px-4 py-4 cursor-pointer border open:border-0 border-zinc-200 rounded-md"
                 onclick="showoffFeature(1)"
             >
-                <summary class="text-xl mb-2 list-none before:content-['+']">
+                <summary
+                    class="text-xl list-none before:content-['+'] group-open:before:content-['_-']"
+                >
                     Format &amp; Quality
                 </summary>
-                <p class="text-slate-500 text-sm text-pretty">
+                <p class="mt-4 px-4 text-slate-500 text-sm text-pretty">
                     Switch between different formats and adjust transformations
                     quality as you see fit
                 </p>
@@ -304,15 +308,17 @@
                 />
             </details>
         </li>
-        <li id="f_item_3" class="list-none min-h-12 mt-8">
+        <li id="f_item_3" class="list-none min-h-12 mt-4">
             <details
-                class="text-start w-full h-full lg:px-4 py-2 cursor-pointer"
+                class="group text-start w-full h-full lg:px-4 py-4 cursor-pointer border open:border-0 border-zinc-200 rounded-md"
                 onclick="showoffFeature(2)"
             >
-                <summary class="text-xl mb-2 list-none before:content-['+']">
+                <summary
+                    class="text-xl list-none before:content-['+'] group-open:before:content-['_-']"
+                >
                     Rotate &amp; Flip
                 </summary>
-                <p class="text-slate-500 text-sm text-pretty">
+                <p class="mt-4 px-4 text-slate-500 text-sm text-pretty">
                     Just as the title says - nothing mysterious
                 </p>
                 <img
@@ -323,15 +329,17 @@
                 />
             </details>
         </li>
-        <li id="f_item_4" class="list-none min-h-12 mt-8">
+        <li id="f_item_4" class="list-none min-h-12 mt-4">
             <details
-                class="text-start w-full h-full lg:px-4 py-2 cursor-pointer"
+                class="group text-start w-full h-full lg:px-4 py-4 cursor-pointer border open:border-0 border-zinc-200 rounded-md"
                 onclick="showoffFeature(3)"
             >
-                <summary class="text-xl mb-2 list-none before:content-['+']">
+                <summary
+                    class="text-xl list-none before:content-['+'] group-open:before:content-['_-']"
+                >
                     Image Adjustments
                 </summary>
-                <p class="text-slate-500 text-sm text-pretty">
+                <p class="mt-4 px-4 text-slate-500 text-sm text-pretty">
                     Brightness, contrast, saturation, gamma we got those too
                 </p>
                 <img
