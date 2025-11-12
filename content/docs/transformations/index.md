@@ -1,5 +1,5 @@
 ---
-title: Transformations (WIP)
+title: Transformations
 ---
 
 ## Brightness
