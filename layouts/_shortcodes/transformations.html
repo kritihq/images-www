@@ -1,0 +1,45 @@
+{{/* layouts/shortcodes/transformations.html */}}
+
+{{ $tabs := .Get "tabs" }}
+{{ $tabsData := split $tabs "|" }}
+
+<section class="transformation-section p-4 mx-auto w-full lg:w-[90%]">
+    <!-- Tabs -->
+    <div class="tab flex flex-row gap-8 [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-md [&>button]:cursor-pointer [&>button]:border-0 [&>button]:hover:bg-blue-200 [&>button.active]:text-white [&>button.active]:bg-blue-500">
+        {{ range $index, $tab := $tabsData }}
+            {{ $tabInfo := split $tab ";" }}
+            {{ $tabId := index $tabInfo 0 }}
+            {{ $tabLabel := index $tabInfo 1 }}
+            <button {{ if eq $index 1 }}class="active"{{ end }} onclick="showTab(event, '{{ $tabId }}')">
+                {{ $tabLabel }}
+            </button>
+        {{ end }}
+    </div>
+
+    <!-- Tab Contents -->
+    <div class="tab-contents [&>.image-container]:hidden [&>.image-container.active]:block">
+    {{ range $index, $tab := $tabsData }}
+        {{ $tabInfo := split $tab ";" }}
+        {{ $tabId := index $tabInfo 0 }}
+        {{ $imageUrl := index $tabInfo 2 }}
+        {{ $altText := index $tabInfo 3 }}
+        {{ $description := index $tabInfo 4 }}
+
+        <div id="{{ $tabId }}" class="image-container {{ if eq $index 1 }}active{{ end }} w-full text-center">
+            <img src="{{ $imageUrl }}" alt="{{ $altText }}" class="demo-image" />
+            {{ if ne $imageUrl "" }}
+            <a href="{{ $imageUrl }}" target="_blank" class="px-2 py-4 text-center text-sm font-mono flex flex-row align-center justify-center gap-4">
+                {{ $imageUrl }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right-icon lucide-arrow-up-right">
+                    <path d="M7 7h10v10" />
+                    <path d="M7 17 17 7" />
+                </svg>
+            </a>
+            {{ end }}
+            <p class="mt-1 text-base text-slate-500">
+                {{ $description }}
+            </p>
+        </div>
+    {{ end }}
+    </div>
+</section>

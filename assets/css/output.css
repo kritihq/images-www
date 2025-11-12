@@ -372,11 +372,11 @@
   .min-h-12 {
     min-height: calc(var(--spacing) * 12);
   }
+  .min-h-\[90vh\] {
+    min-height: 90vh;
+  }
   .min-h-\[100px\] {
     min-height: 100px;
-  }
-  .min-h-\[100vh\] {
-    min-height: 100vh;
   }
   .min-h-\[150px\] {
     min-height: 150px;
@@ -414,6 +414,9 @@
   .max-w-\[70vw\] {
     max-width: 70vw;
   }
+  .min-w-\[90vw\] {
+    min-width: 90vw;
+  }
   .min-w-\[100px\] {
     min-width: 100px;
   }
@@ -447,18 +450,6 @@
   .-translate-y-1\/2 {
     --tw-translate-y: calc(calc(1/2 * 100%) * -1);
     translate: var(--tw-translate-x) var(--tw-translate-y);
-  }
-  .rotate-45 {
-    rotate: 45deg;
-  }
-  .rotate-90 {
-    rotate: 90deg;
-  }
-  .rotate-180 {
-    rotate: 180deg;
-  }
-  .rotate-270 {
-    rotate: 270deg;
   }
   .transform {
     transform: var(--tw-rotate-x,) var(--tw-rotate-y,) var(--tw-rotate-z,) var(--tw-skew-x,) var(--tw-skew-y,);
@@ -667,9 +658,6 @@
       border-top-color: color-mix(in oklab, var(--color-zinc-400) 20%, transparent);
     }
   }
-  .border-b-zinc-200 {
-    border-bottom-color: var(--color-zinc-200);
-  }
   .border-b-zinc-400 {
     border-bottom-color: var(--color-zinc-400);
   }
@@ -731,9 +719,6 @@
     }
     background-image: linear-gradient(var(--tw-gradient-stops));
   }
-  .bg-none {
-    background-image: none;
-  }
   .from-blue-100 {
     --tw-gradient-from: var(--color-blue-100);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
@@ -760,6 +745,9 @@
   }
   .p-2 {
     padding: calc(var(--spacing) * 2);
+  }
+  .p-4 {
+    padding: calc(var(--spacing) * 4);
   }
   .p-8 {
     padding: calc(var(--spacing) * 8);
@@ -837,6 +825,10 @@
   .text-5xl {
     font-size: var(--text-5xl);
     line-height: var(--tw-leading, var(--text-5xl--line-height));
+  }
+  .text-base {
+    font-size: var(--text-base);
+    line-height: var(--tw-leading, var(--text-base--line-height));
   }
   .text-lg {
     font-size: var(--text-lg);
@@ -919,12 +911,6 @@
   }
   .italic {
     font-style: italic;
-  }
-  .no-underline {
-    text-decoration-line: none;
-  }
-  .no-underline\! {
-    text-decoration-line: none !important;
   }
   .underline {
     text-decoration-line: underline;
@@ -1031,24 +1017,6 @@
     &:is([open], :popover-open, :open) {
       border-style: var(--tw-border-style);
       border-width: 0px;
-    }
-  }
-  .open\:before\:content-\[\'_-\'\] {
-    &:is([open], :popover-open, :open) {
-      &::before {
-        content: var(--tw-content);
-        --tw-content: ' -';
-        content: var(--tw-content);
-      }
-    }
-  }
-  .open\:before\:content-\[\'__-\'\] {
-    &:is([open], :popover-open, :open) {
-      &::before {
-        content: var(--tw-content);
-        --tw-content: '  -';
-        content: var(--tw-content);
-      }
     }
   }
   .hover\:scale-105 {
@@ -1217,11 +1185,6 @@
     @media (width < 64rem) {
       font-size: var(--text-3xl);
       line-height: var(--tw-leading, var(--text-3xl--line-height));
-    }
-  }
-  .max-md\:max-w-\[70vw\] {
-    @media (width < 48rem) {
-      max-width: 70vw;
     }
   }
   .max-sm\:col-start-1 {
@@ -1393,6 +1356,16 @@
       padding-inline: calc(var(--spacing) * 24);
     }
   }
+  .\[\&\>\.image-container\]\:hidden {
+    &>.image-container {
+      display: none;
+    }
+  }
+  .\[\&\>\.image-container\.active\]\:block {
+    &>.image-container.active {
+      display: block;
+    }
+  }
   .\[\&\>button\]\:cursor-pointer {
     &>button {
       cursor: pointer;
@@ -1409,11 +1382,6 @@
       border-width: 0px;
     }
   }
-  .\[\&\>button\]\:p-4 {
-    &>button {
-      padding: calc(var(--spacing) * 4);
-    }
-  }
   .\[\&\>button\]\:px-4 {
     &>button {
       padding-inline: calc(var(--spacing) * 4);
@@ -1422,16 +1390,6 @@
   .\[\&\>button\]\:py-2 {
     &>button {
       padding-block: calc(var(--spacing) * 2);
-    }
-  }
-  .\[\&\>button\]\:py-4 {
-    &>button {
-      padding-block: calc(var(--spacing) * 4);
-    }
-  }
-  .\[\&\>button\]\:text-white {
-    &>button {
-      color: var(--color-white);
     }
   }
   .\[\&\>button\]\:hover\:bg-blue-200 {
@@ -1443,48 +1401,6 @@
       }
     }
   }
-  .\[\&\>button\]\:hover\:bg-blue-500 {
-    &>button {
-      &:hover {
-        @media (hover: hover) {
-          background-color: var(--color-blue-500);
-        }
-      }
-    }
-  }
-  .hover\:\[\&\>button\]\:bg-blue-500 {
-    &:hover {
-      @media (hover: hover) {
-        &>button {
-          background-color: var(--color-blue-500);
-        }
-      }
-    }
-  }
-  .\[\&\>button\]\:hover\:text-white {
-    &>button {
-      &:hover {
-        @media (hover: hover) {
-          color: var(--color-white);
-        }
-      }
-    }
-  }
-  .\[\&\>button\.active\]\:bg-blue-200 {
-    &>button.active {
-      background-color: var(--color-blue-200);
-    }
-  }
-  .\[\&\>button\.active\]\:bg-blue-300 {
-    &>button.active {
-      background-color: var(--color-blue-300);
-    }
-  }
-  .\[\&\>button\.active\]\:bg-blue-400 {
-    &>button.active {
-      background-color: var(--color-blue-400);
-    }
-  }
   .\[\&\>button\.active\]\:bg-blue-500 {
     &>button.active {
       background-color: var(--color-blue-500);
@@ -1493,21 +1409,6 @@
   .\[\&\>button\.active\]\:text-white {
     &>button.active {
       color: var(--color-white);
-    }
-  }
-  .\[\&\>div\]\:hidden {
-    &>div {
-      display: none;
-    }
-  }
-  .\[\&\>div\]\:text-center {
-    &>div {
-      text-align: center;
-    }
-  }
-  .\[\&\>div\.active\]\:block {
-    &>div.active {
-      display: block;
     }
   }
   .hover\:\[\&\>span\]\:translate-x-1 {
