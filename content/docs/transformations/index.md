@@ -92,7 +92,7 @@ Border radius transformation applies rounded corners to images, similar to the C
 - **Anti-aliasing:** Smooth edges for professional results
 - **Transparency:** Areas outside radius become transparent
 
-{{< transformations tabs="radius-original;Original;/cgi/images/tr:quality=100/image1.jpg;Original Image;Original image with sharp corners|radius-pixel;20px Radius;/cgi/images/tr:br-radius=20/image1.jpg;20px Border Radius;20 pixel border radius applied to all corners|radius-percent;15% Radius;/cgi/images/tr:br-radius=15%/image1.jpg;15% Border Radius;15% border radius - responsive to image dimensions" >}}
+{{< transformations tabs="radius-original;Original;/cgi/images/tr:quality=100/image1.jpg;Original Image;Original image with sharp corners|radius-pixel;20px Radius;/cgi/images/tr:radius=20/image1.jpg;20px Border Radius;20 pixel border radius applied to all corners|radius-percent;15% Radius;/cgi/images/tr:radius=15%/image1.jpg;15% Border Radius;15% border radius - responsive to image dimensions" >}}
 
 
 ## Saturation

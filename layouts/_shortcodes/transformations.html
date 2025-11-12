@@ -3,7 +3,7 @@
 {{ $tabs := .Get "tabs" }}
 {{ $tabsData := split $tabs "|" }}
 
-<section class="transformation-section p-4 mx-auto w-full lg:w-[90%]">
+<section class="transformation-section p-4 mx-auto w-full">
     <!-- Tabs -->
     <div class="tab flex flex-row gap-8 [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-md [&>button]:cursor-pointer [&>button]:border-0 [&>button]:hover:bg-blue-200 [&>button.active]:text-white [&>button.active]:bg-blue-500">
         {{ range $index, $tab := $tabsData }}
@@ -17,7 +17,7 @@
     </div>
 
     <!-- Tab Contents -->
-    <div class="tab-contents [&>.image-container]:hidden [&>.image-container.active]:block">
+    <div class="tab-contents mt-4 [&>.image-container]:hidden [&>.image-container.active]:block">
     {{ range $index, $tab := $tabsData }}
         {{ $tabInfo := split $tab ";" }}
         {{ $tabId := index $tabInfo 0 }}
@@ -25,8 +25,8 @@
         {{ $altText := index $tabInfo 3 }}
         {{ $description := index $tabInfo 4 }}
 
-        <div id="{{ $tabId }}" class="image-container {{ if eq $index 1 }}active{{ end }} w-full text-center">
-            <img src="https://demo.kritiimages.com{{ $imageUrl }}" alt="{{ $altText }}" class="demo-image" />
+        <div id="{{ $tabId }}" class="image-container {{ if eq $index 1 }}active{{ end }} lg:h-[50vh] text-center">
+            <img src="https://demo.kritiimages.com{{ $imageUrl }}" alt="{{ $altText }}" class="demo-image mx-auto h-[70%]" />
             {{ if ne $imageUrl "" }}
             <a href="https://demo.kritiimages.com{{ $imageUrl }}" target="_blank" class="px-2 py-4 text-center text-sm font-mono flex flex-row align-center justify-center gap-4">
                 {{ $imageUrl }}
