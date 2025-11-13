@@ -27,8 +27,11 @@
 
         <div id="{{ $tabId }}" class="image-container {{ if eq $index 1 }}active{{ end }} lg:h-[50vh] text-center">
             <img src="https://demo.kritiimages.com{{ $imageUrl }}" alt="{{ $altText }}" class="demo-image mx-auto h-[70%]" />
+            <p class="mt-4 text-base text-slate-500">
+                {{ $description }}
+            </p>
             {{ if ne $imageUrl "" }}
-            <a href="https://demo.kritiimages.com{{ $imageUrl }}" target="_blank" class="px-2 py-4 text-center text-sm font-mono flex flex-row align-center justify-center gap-4">
+            <a href="https://demo.kritiimages.com{{ $imageUrl }}" target="_blank" class="p-2 text-center text-sm font-mono decoration-dotted! flex flex-row align-center justify-center gap-4">
                 {{ $imageUrl }}
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-up-right-icon lucide-arrow-up-right">
                     <path d="M7 7h10v10" />
@@ -36,9 +39,6 @@
                 </svg>
             </a>
             {{ end }}
-            <p class="mt-1 text-base text-slate-500">
-                {{ $description }}
-            </p>
         </div>
     {{ end }}
     </div>

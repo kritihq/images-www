@@ -22,13 +22,15 @@
             >
                 {{ range (where .Site.RegularPages.ByTitle "Section" "docs") }}
                 <li
-                    class="min-h-[150px] p-2 hover:bg-zinc-300/20 hover:scale-105 border border-zinc-400/20 rounded-md animate-[slideUp_0.5s_ease-out_1_both]"
+                    class="min-h-[150px] p-2 hover:bg-zinc-300/20 hover:scale-105 border border-zinc-400/20 rounded-md animate-[slideUp_0.5s_ease-out_1_both] wrap-anywhere"
                 >
                     <a
                         href="{{ .Permalink }}"
                         class="h-full w-full inline-block"
                     >
-                        <h3 class="text-lg text-slate-600 decoration-none">
+                        <h3
+                            class="text-lg text-slate-600 decoration-none wrap-anywhere"
+                        >
                             {{ .Params.title | humanize | title }}
                         </h3>
                         {{ with .Params.description }}

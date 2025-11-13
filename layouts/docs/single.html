@@ -23,13 +23,13 @@
                 {{ range (where .Site.RegularPages.ByTitle "Section" "docs") }}
                 {{ if eq .Permalink $.Permalink }}
                 <li
-                    class="bg-zinc-300 pl-4 py-2 border border-zinc-400 animate-[slideUp_0.3s_ease-out_1_both]"
+                    class="bg-zinc-300 px-4 py-2 border border-zinc-400 animate-[slideUp_0.3s_ease-out_1_both] wrap-anywhere"
                 >
                     {{ .Params.title | humanize | title }}
                 </li>
                 {{ else }}
                 <li
-                    class="px-1 py-2 hover:bg-zinc-300 hover:p-2 animate-[slideUp_0.3s_ease-out_1_both]"
+                    class="px-1 py-2 hover:bg-zinc-300 hover:p-2 animate-[slideUp_0.3s_ease-out_1_both] wrap-anywhere"
                 >
                     <a
                         href="{{ .Permalink }}"

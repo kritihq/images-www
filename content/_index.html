@@ -1,15 +1,18 @@
 <dialog
     id="submissionDialog"
-    class="p-8 rounded-md fixed left-2/4 top-2/4 -translate-x-1/2 -translate-y-1/2"
+    class="max-w-[90%] lg:max-w-[50%] p-8 rounded-md fixed left-2/4 top-2/4 -translate-x-1/2 -translate-y-1/2 z-50"
 >
     <button
         onclick="this.closest('dialog').close()"
-        class="absolute right-2 top-2 text-gray-600 hover:text-gray-800"
+        class="p-2 absolute right-2 top-2 text-gray-600 hover:text-gray-800"
         aria-label="Close dialog"
     >
         ✕
     </button>
-    <p id="dialogMessage" class="text-lg"></p>
+    <p
+        id="dialogMessage"
+        class="mt-2 px-4 text-lg text-balance wrap-anywhere"
+    ></p>
 </dialog>
 
 <section class="bg-zinc-100 p-8 md:py-24 px-4 lg:px-24">
