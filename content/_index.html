@@ -120,110 +120,113 @@
             </a>
         </p>
     </div>
+    <style>
+        #hero-animate img {
+            transition: all 0.5s ease-in-out;
+        }
+
+        #hero-animate p::after {
+            position: absolute;
+            /*animation: cursor-blink 1s step-end infinite;*/
+        }
+        @keyframes cursor-blink {
+            50% {
+                opacity: 0;
+            }
+        }
+    </style>
     <div
-        class="md:basis-1/3 md:grow-0 shrink-0 mx-auto max-w-[70vw] lg:max-w-full"
+        id="hero-animate"
+        class="md:basis-1/3 md:grow-0 shrink-0 my-auto w-full"
     >
-        <style>
-            #hero-animate img {
-                transition: all 0.5s ease-in-out;
-            }
-
-            #hero-animate p::after {
-                position: absolute;
-                animation: cursor-blink 1s step-end infinite;
-            }
-            @keyframes cursor-blink {
-                50% {
-                    opacity: 0;
-                }
-            }
-        </style>
-        <div id="hero-animate" class="w-full max-auto">
-            <img
-                id="hero-image"
-                class="w-[50%] lg:w-full h-full mx-auto"
-                src="/assets/images/index/kritiimages_pexels-gabin-cobret-430175667-32948694.webp"
-            />
+        <img
+            id="hero-image"
+            class="max-w-[70vw] lg:max-w-full mx-auto"
+            src="/assets/images/index/kritiimages_pexels-gabin-cobret-430175667-32948694.webp"
+        />
+        <div
+            class="w-full mt-4 px-2 py-4 font-mono text-xs text-left text-slate-700"
+        >
+            <p>&lt;img alt=&quot;profile picture&quot;</p>
             <p
-                class="mt-4 min-h-1 font-mono text-xs md:text-base after:content-['_|'] after:absolute text-left md:text-center text-balance"
+                id="hero-animate-url"
+                class="w-full after:content-['_&quot;'] after:absolute my-1"
             ></p>
+            <p>&gt;</p>
         </div>
-        <script>
-            function animateHero() {
-                const heroImage = document.getElementById("hero-image");
-                const textElement = document.querySelector("#hero-animate p");
-                const baseText = "/tr:";
-                const transforms = [
-                    { style: {}, text: "height=400" },
-                    {
-                        style: { filter: "contrast(0.5)" },
-                        text: ";contrast=50",
-                    },
-                    {
-                        style: { borderRadius: "50%" },
-                        text: ";radius=100%",
-                    },
-                ];
-                let currentIndex = 0;
+    </div>
+    <script>
+        function animateHero() {
+            const heroImage = document.getElementById("hero-image");
+            const textElement = document.getElementById("hero-animate-url");
+            const baseText = 'src="/tr:';
+            const transforms = [
+                { style: {}, text: "height=400" },
+                {
+                    style: { filter: "contrast(0.5)" },
+                    text: ";contrast=50",
+                },
+                {
+                    style: { borderRadius: "50%" },
+                    text: ";radius=100%",
+                },
+            ];
+            let currentIndex = 0;
 
-                async function typeText(newText, keepPrefix = "") {
-                    if (keepPrefix) {
-                        textElement.textContent = keepPrefix;
-                    }
-                    for (let char of newText) {
-                        textElement.textContent += char;
-                        await new Promise((resolve) => setTimeout(resolve, 50));
-                    }
+            async function typeText(newText, keepPrefix = "") {
+                if (keepPrefix) {
+                    textElement.textContent = keepPrefix;
                 }
-
-                async function showNext() {
-                    // Apply style to image
-                    Object.assign(
-                        heroImage.style,
-                        transforms[currentIndex].style,
-                    );
-
-                    // Clear text when cycling back to first frame
-                    if (currentIndex === 0) {
-                        textElement.textContent = "";
-                    }
-
-                    // Type next text
-                    const prefix =
-                        currentIndex === 0 ? "" : textElement.textContent;
-                    await typeText(
-                        currentIndex === 0
-                            ? baseText + transforms[currentIndex].text
-                            : transforms[currentIndex].text,
-                        prefix,
-                    );
-
-                    // Wait before next cycle
-                    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-                    // Reset styles before next transition
-                    if (currentIndex === transforms.length - 1) {
-                        heroImage.style.filter = "";
-                        heroImage.style.borderRadius = "";
-                    }
-
-                    // Update index
-                    currentIndex = (currentIndex + 1) % transforms.length;
+                for (let char of newText) {
+                    textElement.textContent += char;
+                    await new Promise((resolve) => setTimeout(resolve, 50));
                 }
-
-                // Start animation cycle
-                async function animate() {
-                    while (true) {
-                        await showNext();
-                    }
-                }
-
-                animate();
             }
 
-            document.addEventListener("DOMContentLoaded", animateHero);
-        </script>
-    </div>
+            async function showNext() {
+                // Apply style to image
+                Object.assign(heroImage.style, transforms[currentIndex].style);
+
+                // Clear text when cycling back to first frame
+                if (currentIndex === 0) {
+                    textElement.textContent = "";
+                }
+
+                // Type next text
+                const prefix =
+                    currentIndex === 0 ? "" : textElement.textContent;
+                await typeText(
+                    currentIndex === 0
+                        ? baseText + transforms[currentIndex].text
+                        : transforms[currentIndex].text,
+                    prefix,
+                );
+
+                // Wait before next cycle
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+
+                // Reset styles before next transition
+                if (currentIndex === transforms.length - 1) {
+                    heroImage.style.filter = "";
+                    heroImage.style.borderRadius = "";
+                }
+
+                // Update index
+                currentIndex = (currentIndex + 1) % transforms.length;
+            }
+
+            // Start animation cycle
+            async function animate() {
+                while (true) {
+                    await showNext();
+                }
+            }
+
+            animate();
+        }
+
+        document.addEventListener("DOMContentLoaded", animateHero);
+    </script>
 </section>
 <hr class="h-6 w-[200vw] relative -left-[50%] border-y border-zinc-400/40" />
 <section class="bg-zinc-100 px-4 lg:px-12 pt-4 pb-24 text-start">
@@ -285,7 +288,7 @@
                 open=""
             >
                 <summary
-                    class="text-xl list-none before:content-['+'] group-open:before:content-['_-']"
+                    class="text-xl list-none before:px-2 before:content-['+'] group-open:before:content-['_-']"
                 >
                     Resize, Crop &amp; Cut Corners
                 </summary>
@@ -306,7 +309,7 @@
                 onclick="showoffFeature(1)"
             >
                 <summary
-                    class="text-xl list-none before:content-['+'] group-open:before:content-['_-']"
+                    class="text-xl list-none before:px-2 before:content-['+'] group-open:before:content-['_-']"
                 >
                     Format &amp; Quality
                 </summary>
@@ -328,7 +331,7 @@
                 onclick="showoffFeature(2)"
             >
                 <summary
-                    class="text-xl list-none before:content-['+'] group-open:before:content-['_-']"
+                    class="text-xl list-none before:px-2 before:content-['+'] group-open:before:content-['_-']"
                 >
                     Rotate &amp; Flip
                 </summary>
@@ -349,7 +352,7 @@
                 onclick="showoffFeature(3)"
             >
                 <summary
-                    class="text-xl list-none before:content-['+'] group-open:before:content-['_-']"
+                    class="text-xl list-none before:px-2 before:content-['+'] group-open:before:content-['_-']"
                 >
                     Image Adjustments
                 </summary>
