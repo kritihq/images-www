@@ -5,12 +5,12 @@
 
 <section class="transformation-section p-4 mx-auto w-full">
     <!-- Tabs -->
-    <div class="tab flex flex-row gap-8 [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-md [&>button]:cursor-pointer [&>button]:border-0 [&>button]:hover:bg-blue-200 [&>button.active]:text-white [&>button.active]:bg-blue-500">
+    <div class="tab flex flex-row flex-wrap gap-2 lg:gap-8 [&>button]:px-4 [&>button]:py-2 [&>button]:rounded-md [&>button]:cursor-pointer [&>button]:border-0 [&>button]:hover:bg-blue-200 [&>button.active]:text-white [&>button.active]:bg-blue-500">
         {{ range $index, $tab := $tabsData }}
             {{ $tabInfo := split $tab ";" }}
             {{ $tabId := index $tabInfo 0 }}
             {{ $tabLabel := index $tabInfo 1 }}
-            <button {{ if eq $index 1 }}class="active"{{ end }} onclick="showTab(event, '{{ $tabId }}')">
+            <button class="text-xs lg:text-base {{ if eq $index 1 }} active{{ end }}" onclick="showTab(event, '{{ $tabId }}')">
                 {{ $tabLabel }}
             </button>
         {{ end }}
@@ -25,8 +25,8 @@
         {{ $altText := index $tabInfo 3 }}
         {{ $description := index $tabInfo 4 }}
 
-        <div id="{{ $tabId }}" class="image-container {{ if eq $index 1 }}active{{ end }} lg:h-[50vh] text-center">
-            <img src="https://demo.kritiimages.com{{ $imageUrl }}" alt="{{ $altText }}" class="demo-image mx-auto h-[70%]" />
+        <div id="{{ $tabId }}" class="image-container {{ if eq $index 1 }}active{{ end }} max-md:w-[80vw] lg:h-[50vh] text-center">
+            <img src="https://demo.kritiimages.com{{ $imageUrl }}" alt="{{ $altText }}" class="demo-image mx-auto h-full md:h-[70%]" />
             <p class="mt-4 text-base text-slate-500">
                 {{ $description }}
             </p>
