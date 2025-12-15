@@ -159,7 +159,7 @@ Background transformation sets a background color for transparent areas, padding
 - **Special:** transparent (default)
 - **Use cases:** Padding, rotation fills, PNG transparency
 
-{{< transformations tabs="background-original;Original;/cgi/images/tr:quality=100/image1.jpg;Original Image;Original image (transparent background)|background-red;Red Background;/cgi/images/tr:width=700,height=500,background=red/image1.jpg;Red Background;Red background (background=red)|background-blue;Blue Background;/cgi/images/tr:width=700,height=500,background=blue/image1.jpg;Blue Background;Blue background (background=blue)" >}}
+{{< transformations tabs="background-original;Original;/cgi/images/tr:quality=100/image1.jpg;Original Image;Original image (transparent background)|background-red;Red Background;/cgi/images/tr:width=700,height=500,background=red,fit=pad/image1.jpg;Red Background;Red background (background=red)|background-blue;Blue Background;/cgi/images/tr:width=700,height=500,background=blue,fit=pad/image1.jpg;Blue Background;Blue background (background=blue)" >}}
 
 
 ## Fit

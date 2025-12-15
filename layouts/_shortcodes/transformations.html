@@ -26,7 +26,7 @@
         {{ $description := index $tabInfo 4 }}
 
         <div id="{{ $tabId }}" class="image-container {{ if eq $index 1 }}active{{ end }} max-md:w-[80vw] lg:h-[50vh] text-center">
-            <img src="https://demo.kritiimages.com{{ $imageUrl }}" alt="{{ $altText }}" class="demo-image mx-auto h-full md:h-[70%]" />
+            <img src="http://localhost:8080{{ $imageUrl }}" alt="{{ $altText }}" class="demo-image mx-auto h-full md:h-[70%]" />
             <p class="mt-4 text-base text-slate-500">
                 {{ $description }}
             </p>
