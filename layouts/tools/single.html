@@ -1,0 +1,26 @@
+{{ define "main" }}
+<main
+    class="w-3/4 w-max-[1080px] max-lg:w-[96%] mx-auto max-lg:px-0 border-x border-x-zinc-400/40 overflow-scroll"
+>
+    <nav
+        aria-label="breadcrumbs"
+        class="px-2 py-2 col-start-2 col-end-4 max-sm:col-start-1 max-sm:col-end-2 border-l border-zinc-400/20 max-sm:border-l-0"
+    >
+        <ul id="breadcrumbs">
+            {{- range $k, $v := .Ancestors.Reverse }} {{- if (gt $k 0) }}
+            <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+            {{- end }} {{- end }}
+            <li class="text-slate-500 breadcrumb-curr">{{ .LinkTitle }}</li>
+        </ul>
+    </nav>
+
+    <article class="bg-zinc-100 rounded-md border-t border-t-zinc-400/20">
+        <section
+            id="content"
+            class="w-max-[75%] p-4 md:p-8 borer-x border-zinc-400/40 rounded-b-md text-balanced"
+        >
+            {{ .Content }}
+        </section>
+    </article>
+</main>
+{{ end }}
