@@ -3,10 +3,6 @@ title: Image Compressor
 ---
 
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 2em;
-    }
     .results {
         margin-top: 2em;
     }
@@ -16,9 +12,6 @@ title: Image Compressor
     .stats {
         font-size: 0.95em;
         color: #444;
-    }
-    .download-btn {
-        margin-left: 1em;
     }
 </style>
 <section class="text-slate-700">
@@ -55,29 +48,44 @@ title: Image Compressor
             </ul>
         </div>
     </div>
-    <div>
+    <div class="hidden" id="file-list-div">
         <ul id="file-list" class="mt-8 *:m-0!"></ul>
-        <button
-            id="compress-btn"
-            class="mt-4 px-4 py-2 bg-blue-500 text-slate-100 text-lg rounded-md"
+        <div
+            id="button-row"
+            class="p-4 flex flex-row justify-end items-center gap-4 bg-slate-200 border border-zinc-200"
         >
-            Compress All
-        </button>
-        <button
-            id="download-all-btn"
-            class="mt-4 px-4 py-2 bg-blue-500 text-slate-100 text-lg rounded-md hidden"
-        >
-            Download All
-        </button>
+            <label class="flex flex-row items-center gap-2 text-sm font-medium">
+                <span>Compression:</span>
+                <select id="quality-select" class="border rounded px-2 py-1">
+                    <option value="0.25">High</option>
+                    <option value="0.5" selected>Medium</option>
+                    <option value="0.75">Low</option>
+                </select>
+            </label>
+            <button
+                id="compress-btn"
+                class="px-4 py-2 bg-blue-500 hover:bg-blue-800 disabled:bg-blue-200 text-slate-100 text-sm rounded"
+            >
+                Compress All
+            </button>
+            <button
+                id="download-all-btn"
+                class="px-4 py-2 bg-blue-500 hover:bg-blue-800 disabled:bg-blue-200 text-slate-100 text-sm rounded hidden"
+            >
+                Download All
+            </button>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script>
         // Image Compressor JS with Drag & Drop
         const elemDropZone = document.getElementById("drop-zone");
         const elemFileInput = document.getElementById("file-input");
+        const elemQualitySelect = document.getElementById("quality-select");
         const elemCompressBtn = document.getElementById("compress-btn");
         const elemDownloadAllBtn = document.getElementById("download-all-btn");
         const elemFileList = document.getElementById("file-list");
+        const elemFileListDiv = document.getElementById("file-list-div");
 
         let files = [];
 
@@ -104,7 +112,28 @@ title: Image Compressor
             handleFiles(e.target.files);
         });
 
+        elemCompressBtn.addEventListener("click", async () => {
+            if (!files.length) {
+                alert("Please select image(s) first.");
+                return;
+            }
+
+            elemCompressBtn.disabled = true;
+            for (let i = 0; i < files.length; ++i) {
+                if (!files[i].compressedBlob) {
+                    await compressAndStore(i);
+                }
+            }
+            renderFileList();
+        });
+
+        elemDownloadAllBtn.onclick = () => {
+            const compressed = files.filter((f) => f.compressedBlob);
+            if (compressed.length) downloadZip(compressed);
+        };
+
         function handleFiles(fileList) {
+            elemCompressBtn.disabled = false;
             const newFiles = Array.from(fileList)
                 .filter((f) => f.type.startsWith("image/"))
                 .map((f) => {
@@ -116,26 +145,17 @@ title: Image Compressor
                 });
 
             files = files.concat(newFiles);
+            if (files.length > 0) elemFileListDiv.classList.remove("hidden");
             renderFileList();
         }
-
-        elemCompressBtn.addEventListener("click", async () => {
-            if (!files.length) {
-                alert("Please select image(s) first.");
-                return;
-            }
-            for (let i = 0; i < files.length; ++i) {
-                if (!files[i].compressedBlob) {
-                    await compressAndStore(i);
-                }
-            }
-            renderFileList();
-        });
 
         async function compressAndStore(idx) {
             const f = files[idx];
             const { compressedBlob, originalSize, percent, format } =
-                await compressImage(f.file);
+                await compressImage(
+                    f.file,
+                    parseFloat(elemQualitySelect.value),
+                );
             files[idx] = {
                 ...f,
                 compressedBlob,
@@ -144,12 +164,11 @@ title: Image Compressor
             };
         }
 
-        async function compressImage(file) {
+        async function compressImage(file, quality = 0.5) {
             const originalSize = file.size;
             const img = await loadImage(file);
             const format = getImageFormat(file);
             const mime = "image/" + format;
-            const quality = format === "jpeg" ? 0.7 : 0.8; // adjust as needed
 
             // Draw to canvas
             const canvas = document.createElement("canvas");
@@ -225,7 +244,7 @@ title: Image Compressor
                                 ${(f.file.size / (1024 * 1024)).toFixed(2)}MB
                                 ${
                                     f.compressedBlob
-                                        ? ` &ShortRightArrow; ${(f.compressedBlob.size / (1024 * 1024)).toFixed(2)}MB (${f.percent}%)`
+                                        ? ` &ShortRightArrow; ${(f.compressedBlob.size / (1024 * 1024)).toFixed(2)}MB <span class="text-green-700">(${f.percent}%)</span>`
                                         : ""
                                 }
                             </p>
@@ -235,6 +254,7 @@ title: Image Compressor
                                 ? `<button data-idx="${i}" class="download-btn px-2 py-1 border border-blue-400 rounded-sm text-xs font-bold text-blue-400 uppercase hover:text-white hover:bg-blue-400">Download</button>`
                                 : `<button data-idx="${i}" class="compress-btn px-2 py-1 border border-green-400 rounded-sm text-xs font-bold text-green-600 uppercase hover:text-white hover:bg-green-400">Compress</button>`
                         }
+                        <button data-idx="${i}" class="cancel-btn px-2 py-1 border border-red-400 rounded-sm text-xs font-bold text-red-600 uppercase hover:text-white hover:bg-red-400 ml-2">Cancel</button>
                     </li>
                 `;
                 elemFileList.innerHTML += html;
@@ -265,6 +285,18 @@ title: Image Compressor
                 btn.onclick = async () => {
                     const idx = btn.getAttribute("data-idx");
                     await compressAndStore(idx);
+                    renderFileList();
+                };
+            });
+
+            // Attach cancel handlers
+            document.querySelectorAll(".cancel-btn").forEach((btn) => {
+                btn.onclick = () => {
+                    const idx = btn.getAttribute("data-idx");
+                    files.splice(idx, 1);
+
+                    elemCompressBtn.disabled = files.length > 0;
+                    if (files <= 0) elemFileListDiv.classList.add("hidden");
                     renderFileList();
                 };
             });
