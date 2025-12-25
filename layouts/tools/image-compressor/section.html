@@ -32,11 +32,6 @@
                         >
                             {{ .Title | title }}
                         </h3>
-                        {{ with .Params.description }}
-                        <p class="text-sm text-shadow-slate-400">
-                            {{ . | humanize | title }}
-                        </p>
-                        {{ end }}
                     </a>
                 </li>
                 {{ end }}

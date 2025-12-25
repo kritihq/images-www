@@ -1,18 +1,33 @@
+{{ $params1 := dict
+    "description" "Compress images with our free tool. Secure & no limits."
+    "keywords" "image compressor, image compression, compress images, free image compressor"
+}}
+
 {{ $page1 := dict
   "kind" "page"
-  "path" "jpeg"
-  "title" "Compress JPEGs"
+  "path" "images"
+  "title" "Compress Images"
+  "params" $params1
 }}
 {{ $page2 := dict
   "kind" "page"
-  "path" "png"
-  "title" "Compress PNGs"
+  "path" "jpeg"
+  "title" "Compress JPEGs"
+  "params" $params1
 }}
 {{ $page3 := dict
   "kind" "page"
+  "path" "png"
+  "title" "Compress PNGs"
+  "params" $params1
+}}
+{{ $page4 := dict
+  "kind" "page"
   "path" "webp"
   "title" "Compress WebPs"
+  "params" $params1
 }}
 {{ .AddPage $page1 }}
 {{ .AddPage $page2 }}
 {{ .AddPage $page3 }}
+{{ .AddPage $page4 }}
