@@ -5,15 +5,10 @@
 }}
 {{ $page2 := dict
   "kind" "page"
-  "path" "jpg"
-  "title" "Compress JPGs"
-}}
-{{ $page3 := dict
-  "kind" "page"
   "path" "png"
   "title" "Compress PNGs"
 }}
-{{ $page4 := dict
+{{ $page3 := dict
   "kind" "page"
   "path" "webp"
   "title" "Compress WebPs"
@@ -21,4 +16,3 @@
 {{ .AddPage $page1 }}
 {{ .AddPage $page2 }}
 {{ .AddPage $page3 }}
-{{ .AddPage $page4 }}

@@ -16,11 +16,10 @@
             aria-label="quick links"
             class="w-3/4 max-lg:w-full mx-auto p-8 max-sm:p-2"
         >
-            <p class="mb-8 text-sm text-blue-600 uppercase">Free Tools</p>
             <menu
                 class="list-none grid grid-cols-3 max-sm:grid-cols-1 gap-8 auto-rows-fr rounded-md"
             >
-                {{ range (where .Site.RegularPages.ByTitle "Section" "tools") }}
+                {{ range .CurrentSection.Pages }}
                 <li
                     class="min-h-[150px] p-2 hover:bg-zinc-300/20 hover:scale-105 border border-zinc-400/20 rounded-md animate-[slideUp_0.5s_ease-out_1_both] wrap-anywhere"
                 >
@@ -31,7 +30,7 @@
                         <h3
                             class="text-lg text-slate-600 decoration-none wrap-anywhere"
                         >
-                            {{ .Params.title | humanize | title }}
+                            {{ .Title | title }}
                         </h3>
                         {{ with .Params.description }}
                         <p class="text-sm text-shadow-slate-400">
@@ -43,12 +42,6 @@
                 {{ end }}
             </menu>
         </nav>
-        <section
-            id="content"
-            class="w-max-[75%] max-sm:px-4 p-8 borer-x border-zinc-400/40 rounded-b-md text-balanced col-start-1 row-start-2"
-        >
-            {{ .Content }}
-        </section>
     </article>
 </main>
 {{ end }}
