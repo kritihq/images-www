@@ -1,0 +1,74 @@
+<dialog
+    id="submissionDialog"
+    class="max-w-[90%] lg:max-w-[50%] p-8 rounded-md fixed left-2/4 top-2/4 -translate-x-1/2 -translate-y-1/2 z-50"
+>
+    <button
+        onclick="this.closest('dialog').close()"
+        class="p-2 absolute right-2 top-2 text-gray-600 hover:text-gray-800"
+        aria-label="Close dialog"
+    >
+        ✕
+    </button>
+    <p
+        id="dialogMessage"
+        class="mt-2 px-4 text-lg text-balance wrap-anywhere"
+    ></p>
+</dialog>
+
+<form
+    id="waitlistForm"
+    class="mt-12 flex flex-col md:flex-row gap-4"
+    method="post"
+    action="https://waitlist.kritiimages.com/api/v1/waitlist"
+>
+    <input
+        type="email"
+        id="email"
+        name="email"
+        placeholder="Enter your email"
+        class="basis-1/2 px-4 py-2 rounded-md border border-zinc-300 focus:outline-none focus:border-blue-500"
+        required=""
+    />
+    <button
+        type="submit"
+        class="px-4 py-2 rounded-md text-sm text-slate-50 hover:bg-blue-800 bg-blue-700 border border-blue-700 md:row-start-2"
+    >
+        Join the Waitlist
+    </button>
+</form>
+<script>
+    document
+        .getElementById("waitlistForm")
+        .addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const dialog = document.getElementById("submissionDialog");
+            const dialogMessage = document.getElementById("dialogMessage");
+
+            try {
+                const response = await fetch(this.action, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ email: email }),
+                });
+
+                if (response.ok) {
+                    dialogMessage.textContent =
+                        "Thank you for joining our waitlist!";
+                    dialog.showModal();
+                    this.reset(); // Clear the form
+                } else {
+                    dialogMessage.textContent =
+                        "Could not submit. Please try again later.";
+                    dialog.showModal();
+                }
+            } catch (error) {
+                dialogMessage.textContent =
+                    "Could not submit. Please try again later.";
+                dialog.showModal();
+            }
+        });
+</script>

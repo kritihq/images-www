@@ -4,6 +4,9 @@
     {{ if .IsHome }}{{ site.Title }}{{ else }}{{ printf "%s | %s" .Title
     site.Title }}{{ end }}
 </title>
-<meta name="description" content="Transform & Optimise Images at Scale." />
+<meta
+    name="description"
+    content="{{ .Params.description | default "Transform & Optimise Images at Scale" }}"
+/>
 {{ partialCached "head/css.html" . }} {{ partialCached "head/js.html" . }} {{
 partialCached "head/og.html" . }}
