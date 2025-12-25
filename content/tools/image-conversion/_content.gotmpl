@@ -1,0 +1,25 @@
+{{ $formats := slice
+    (dict "name" "JPEG" "ext" "jpeg")
+    (dict "name" "PNG" "ext" "png")
+    (dict "name" "WEBP" "ext" "webp")
+    (dict "name" "AVIF" "ext" "avif")
+}}
+
+{{ range $from := $formats }}
+    {{ range $to := $formats }}
+        {{ if ne $from.ext $to.ext }}
+            {{ $params := dict
+                "description" (printf "Convert images from %s to %s with our free tool. Secure & no limits." $from.name $to.name)
+                "fromFormat" $from.ext
+                "toFormat" $to.ext
+            }}
+            {{ $page := dict
+                "kind" "page"
+                "path" (printf "%s-to-%s" $from.ext $to.ext)
+                "title" (printf "Convert %s to %s" $from.name $to.name)
+                "params" $params
+            }}
+            {{ $.AddPage $page }}
+        {{ end }}
+    {{ end }}
+{{ end }}

@@ -1,0 +1,463 @@
+{{ define "main" }}
+<main
+    class="w-3/4 w-max-[1080px] max-lg:w-[96%] mx-auto max-lg:px-0 border-x border-x-zinc-400/40 overflow-scroll"
+>
+    <nav
+        aria-label="breadcrumbs"
+        class="px-2 py-2 col-start-2 col-end-4 max-sm:col-start-1 max-sm:col-end-2 border-l border-zinc-400/20 max-sm:border-l-0"
+    >
+        <ul id="breadcrumbs">
+            {{- range $k, $v := .Ancestors.Reverse }} {{- if (gt $k 0) }}
+            <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+            {{- end }} {{- end }}
+            <li class="text-slate-500 breadcrumb-curr">{{ .LinkTitle }}</li>
+        </ul>
+    </nav>
+
+    <article class="bg-zinc-100 rounded-md border-t border-t-zinc-400/20">
+        <section
+            class="w-max-[75%] px-8 md:px-[12%] py-12 borer-x border-zinc-400/40 text-balanced text-slate-700"
+        >
+            <div
+                class="w-full flex flex-row-reverse md:flex-row gap-4 md:gap-12 items-center"
+            >
+                <div
+                    class="basis-[50%] flex-0 min-h-[35vh] p-8 bg-zinc-200/40 cursor-pointer rounded-md border-2 border-dashed border-blue-700 text-center flex flex-col flex-wrap gap-4 align-center justify-center"
+                    id="drop-zone"
+                >
+                    <input
+                        type="file"
+                        id="file-input"
+                        multiple
+                        accept="image/*"
+                        style="display: none"
+                    />
+                    <h2 class="decoration-0!">
+                        Drag &amp; drop<br />
+                        or click to select
+                    </h2>
+                    <p class="text-sm text-slate-700">
+                        Upload PNG, JPEG, WEBP or HEIF images
+                    </p>
+                </div>
+                <div class="flex-1 text-slate-700">
+                    <h1 class="mb-4 md:mb-8">{{ .Title }}</h1>
+                    <p class="text-xl">
+                        Instantly {{ .Title }} for free, browser-side image
+                        conversion tool.
+                    </p>
+                    <ul class="mt-8 list-disc list-inside text-lg">
+                        <li class="m-1!">
+                            Privacy Friendly, client side conversion
+                        </li>
+                        <li class="m-1!">Ad Free</li>
+                        <li class="m-1!">No Usage Limits</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="hidden" id="file-list-div">
+                <ul id="file-list" class="mt-8 *:m-0!"></ul>
+                <div
+                    id="button-row"
+                    class="p-4 flex flex-row justify-end items-center gap-4 bg-slate-200 border border-zinc-200"
+                >
+                    <label
+                        class="flex flex-row items-center gap-2 text-sm font-medium"
+                    >
+                        <span>Compression:</span>
+                        <select
+                            id="quality-select"
+                            class="border rounded px-2 py-1"
+                        >
+                            <option value="0.25">High</option>
+                            <option value="0.5" selected>Medium</option>
+                            <option value="0.75">Low</option>
+                        </select>
+                    </label>
+                    <button
+                        id="compress-btn"
+                        class="px-4 py-2 bg-blue-500 hover:bg-blue-800 disabled:bg-blue-200 text-slate-100 text-sm rounded"
+                    >
+                        Convert All
+                    </button>
+                    <button
+                        id="download-all-btn"
+                        class="px-4 py-2 bg-blue-500 hover:bg-blue-800 disabled:bg-blue-200 text-slate-100 text-sm rounded hidden"
+                    >
+                        Download All
+                    </button>
+                </div>
+            </div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+            <script>
+                const elemDropZone = document.getElementById("drop-zone");
+                const elemFileInput = document.getElementById("file-input");
+                const elemQualitySelect =
+                    document.getElementById("quality-select");
+                const elemCompressBtn = document.getElementById("compress-btn");
+                const elemDownloadAllBtn =
+                    document.getElementById("download-all-btn");
+                const elemFileList = document.getElementById("file-list");
+                const elemFileListDiv =
+                    document.getElementById("file-list-div");
+
+                let files = [];
+                const toFormat = {{ .Params.toFormat | default "jpeg" }};
+
+                // Drag & Drop handlers
+                elemDropZone.addEventListener("click", () =>
+                    elemFileInput.click(),
+                );
+
+                elemDropZone.addEventListener("dragover", (e) => {
+                    e.preventDefault();
+                    elemDropZone.classList.add("dragover");
+                });
+
+                elemDropZone.addEventListener("dragleave", (e) => {
+                    e.preventDefault();
+                    elemDropZone.classList.remove("dragover");
+                });
+
+                elemDropZone.addEventListener("drop", (e) => {
+                    e.preventDefault();
+                    elemDropZone.classList.remove("dragover");
+                    handleFiles(e.dataTransfer.files);
+                });
+
+                elemFileInput.addEventListener("change", (e) => {
+                    handleFiles(e.target.files);
+                });
+
+                elemCompressBtn.addEventListener("click", async () => {
+                    if (!files.length) {
+                        alert("Please select image(s) first.");
+                        return;
+                    }
+
+                    elemCompressBtn.disabled = true;
+                    for (let i = 0; i < files.length; ++i) {
+                        if (!files[i].compressedBlob) {
+                            await convertAndStore(i);
+                        }
+                    }
+                    renderFileList();
+                });
+
+                elemDownloadAllBtn.onclick = () => {
+                    const compressed = files.filter((f) => f.compressedBlob);
+                    if (compressed.length) downloadZip(compressed);
+                };
+
+                function handleFiles(fileList) {
+                    elemCompressBtn.disabled = false;
+                    const newFiles = Array.from(fileList)
+                        .filter((f) => f.type.startsWith("image/"))
+                        .map((f) => {
+                            // Generate preview
+                            return {
+                                file: f,
+                                previewUrl: URL.createObjectURL(f),
+                            };
+                        });
+
+                    files = files.concat(newFiles);
+                    if (files.length > 0)
+                        elemFileListDiv.classList.remove("hidden");
+                    renderFileList();
+                }
+
+                async function convertAndStore(idx) {
+                    const f = files[idx];
+                    const { compressedBlob, originalSize, percent, format } =
+                        await convertImage(
+                            f.file,
+                            parseFloat(elemQualitySelect.value),
+                            toFormat,
+                        );
+                    files[idx] = {
+                        ...f,
+                        compressedBlob,
+                        percent,
+                        format,
+                    };
+                }
+
+                async function convertImage(
+                    file,
+                    quality = 0.5,
+                    outFormat = "jpeg",
+                ) {
+                    const originalSize = file.size;
+                    const img = await loadImage(file);
+
+                    // Supported formats and their MIME types
+                    const formatMap = {
+                        jpeg: "image/jpeg",
+                        jpg: "image/jpeg",
+                        png: "image/png",
+                        webp: "image/webp",
+                        avif: "image/avif",
+                        // HEIC/HEIF not supported for encoding in browsers
+                    };
+
+                    // Validate format
+                    let format = outFormat.toLowerCase();
+                    if (!(format in formatMap)) {
+                        throw new Error("Unsupported format: " + format);
+                    }
+                    if (format === "heic" || format === "heif") {
+                        alert("HEIC/HEIF export is not supported in browsers.");
+                        format = "jpeg";
+                    }
+
+                    const mime = formatMap[format];
+
+                    // Draw to canvas
+                    const canvas = document.createElement("canvas");
+                    canvas.width = img.naturalWidth;
+                    canvas.height = img.naturalHeight;
+                    const ctx = canvas.getContext("2d");
+                    ctx.drawImage(img, 0, 0);
+
+                    // Convert
+                    const blob = await new Promise((resolve) =>
+                        canvas.toBlob(resolve, mime, quality),
+                    );
+                    const compressedSize = blob.size;
+                    const percent = (
+                        (100 * (originalSize - compressedSize)) /
+                            originalSize || 0
+                    ).toFixed(1);
+
+                    return {
+                        compressedBlob: blob,
+                        originalSize,
+                        percent,
+                        format,
+                    };
+                }
+
+                function loadImage(file) {
+                    return new Promise((resolve, reject) => {
+                        const img = new window.Image();
+                        img.onload = () => resolve(img);
+                        img.onerror = reject;
+                        img.src = URL.createObjectURL(file);
+                    });
+                }
+
+                function getImageFormat(file) {
+                    const ext = file.name.split(".").pop().toLowerCase();
+                    if (ext === "jpg" || ext === "jpeg") return "jpeg";
+                    if (ext === "webp") return "webp";
+                    return "png";
+                }
+
+                async function downloadZip(results) {
+                    const zip = new JSZip();
+                    results.forEach((res) => {
+                        const fname =
+                            res.file.name.replace(/\.[^.]+$/, "") +
+                            "-compressed." +
+                            res.format;
+                        zip.file(fname, res.compressedBlob);
+                    });
+                    const blob = await zip.generateAsync({ type: "blob" });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = "compressed-images.zip";
+                    document.body.appendChild(a);
+                    a.click();
+                    setTimeout(() => {
+                        URL.revokeObjectURL(url);
+                        a.remove();
+                    }, 100);
+                }
+
+                function renderFileList() {
+                    elemFileList.innerHTML = "";
+                    files.forEach((f, i) => {
+                        let html = `
+                                <li class="p-4 flex flex-row justify-start items-center gap-4 border border-zinc-200">
+                                    <img src="${f.previewUrl}" width="50" height="50" class="w-[50px] h-[50px] rounded-[4px] border border-gray-500 object-cover" alt="preview" />
+                                    <div class="block flex-0 basis-[80%]">
+                                        <p class="font-bold">${f.file.name}</p>
+                                        <p class="text-sm">
+                                            ${(f.file.size / (1024 * 1024)).toFixed(2)}MB
+                                            ${
+                                                f.compressedBlob
+                                                    ? ` &ShortRightArrow; ${(f.compressedBlob.size / (1024 * 1024)).toFixed(2)}MB <span class="text-green-700">(${f.percent}%)</span>`
+                                                    : ""
+                                            }
+                                        </p>
+                                    </div>
+                                    ${
+                                        f.compressedBlob
+                                            ? `<button data-idx="${i}" class="download-btn px-2 py-1 border border-blue-400 rounded-sm text-xs font-bold text-blue-400 uppercase hover:text-white hover:bg-blue-400">Download</button>`
+                                            : `<button data-idx="${i}" class="compress-btn px-2 py-1 border border-green-400 rounded-sm text-xs font-bold text-green-600 uppercase hover:text-white hover:bg-green-400">Convert</button>`
+                                    }
+                                    <button data-idx="${i}" class="cancel-btn px-2 py-1 border border-red-400 rounded-sm text-xs font-bold text-red-600 uppercase hover:text-white hover:bg-red-400 ml-2">Cancel</button>
+                                </li>
+                            `;
+                        elemFileList.innerHTML += html;
+                    });
+                    // Attach download handlers
+                    document
+                        .querySelectorAll(".download-btn")
+                        .forEach((btn) => {
+                            btn.onclick = () => {
+                                const idx = btn.getAttribute("data-idx");
+                                const f = files[idx];
+                                const url = URL.createObjectURL(
+                                    f.compressedBlob,
+                                );
+                                const a = document.createElement("a");
+                                a.href = url;
+                                a.download =
+                                    f.file.name.replace(/\.[^.]+$/, "") +
+                                    "-compressed." +
+                                    f.format;
+                                document.body.appendChild(a);
+                                a.click();
+                                setTimeout(() => {
+                                    URL.revokeObjectURL(url);
+                                    a.remove();
+                                }, 100);
+                            };
+                        });
+
+                    // Attach per-file compress handlers
+                    document
+                        .querySelectorAll(".compress-btn")
+                        .forEach((btn) => {
+                            btn.onclick = async () => {
+                                const idx = btn.getAttribute("data-idx");
+                                await convertAndStore(idx);
+                                renderFileList();
+                            };
+                        });
+
+                    // Attach cancel handlers
+                    document.querySelectorAll(".cancel-btn").forEach((btn) => {
+                        btn.onclick = () => {
+                            const idx = btn.getAttribute("data-idx");
+                            files.splice(idx, 1);
+
+                            elemCompressBtn.disabled = files.length > 0;
+                            if (files <= 0)
+                                elemFileListDiv.classList.add("hidden");
+                            renderFileList();
+                        };
+                    });
+
+                    // Show/hide Download All
+                    const anyCompressed = files.some((f) => f.compressedBlob);
+                    if (anyCompressed) {
+                        elemDownloadAllBtn.classList.remove("hidden");
+                    } else {
+                        elemDownloadAllBtn.classList.add("hidden");
+                    }
+                }
+            </script>
+        </section>
+        <section
+            class="w-max-[75%] px-4 py-24 md:px-8 borer-x border-zinc-400/40 text-balanced text-center flex flex-col items-center justify-center gap-8"
+        >
+            <h2 class="text-3xl! text-blue-600">
+                How to convert image formats
+            </h2>
+            <p class="text-xl text-slate-600">
+                Convert any image format right now, with complete privacy & no
+                daily limits.
+            </p>
+            <ul
+                class="lg:w-[75%] grid grid-cols-3 gap-8 text-left list-decimal list-inside marker:text-xl marker:text-blue-600"
+            >
+                <li class="p-8 border border-blue-300 rounded-xl">
+                    <h3 class="inline">Add image</h3>
+                    <p class="mt-4 text-slate-600">
+                        Drag and drop images to convert or click the section to
+                        upload images
+                    </p>
+                </li>
+                <li class="p-8 border border-blue-300 rounded-xl">
+                    <h3 class="inline">Click convert</h3>
+                    <p class="mt-4 text-slate-600">
+                        Select compression quality, "High" leads to smaller
+                        image sizes
+                    </p>
+                </li>
+                <li class="p-8 border border-blue-300 rounded-xl">
+                    <h3 class="inline">Download</h3>
+                    <p class="mt-4 text-slate-600">
+                        Download as zip or individual image
+                    </p>
+                </li>
+            </ul>
+        </section>
+        <section
+            class="w-max-[75%] px-4 py-24 md:px-8 borer-x border-zinc-400/40 bg-zinc-300/40 text-balanced text-center flex flex-col items-center justify-center gap-8"
+        >
+            <h2 class="text-3xl! text-blue-600">Convert Image in real time</h2>
+            <p class="text-xl text-slate-600">
+                Automatic image format conversion API with real-time
+                transformations on any image for you website/app.
+            </p>
+            <div class="w-[40%]">{{ partial "wishlist" . }}</div>
+        </section>
+        <section
+            class="w-max-[75%] p-4 md:p-8 borer-x border-zinc-400/40 text-balanced text-center flex flex-col items-center justify-center gap-8"
+        >
+            <h2 class="text-3xl! text-blue-600">FAQs</h2>
+            <div class="w-[75%] flex flex-col gap-4">
+                <details
+                    class="w-full p-4 text-left text-xl border border-zinc-400/40 rounded-md"
+                >
+                    <summary class="marker:content-['+_']">
+                        <h3 class="inline ml-4">Is this tool free?</h3>
+                    </summary>
+                    <p class="mt-4 text-base text-slate-700">
+                        Yes this tool is free to use. It help convert image
+                        format quickly and without watermarks. Also no Ads.
+                    </p>
+                </details>
+                <details
+                    class="w-full p-4 text-left text-xl border border-zinc-400/40 rounded-md"
+                >
+                    <summary class="marker:content-['+_']">
+                        Do I need to install some software?
+                    </summary>
+
+                    <p class="mt-4 text-base text-slate-700">
+                        Not needed, everything happens right on your browser.
+                    </p>
+                </details>
+                <details
+                    class="w-full p-4 text-left text-xl border border-zinc-400/40 rounded-md"
+                >
+                    <summary class="marker:content-['+_']">
+                        What about security? Are my files uploaded somewhere?
+                    </summary>
+                    <p class="mt-4 text-base text-slate-700">
+                        NO. This tool is completely privacy friendly all
+                        processing happens on browsers side and no images are
+                        sent to our servers.
+                    </p>
+                </details>
+                <details
+                    class="w-full p-4 text-left text-xl border border-zinc-400/40 rounded-md"
+                >
+                    <summary class="marker:content-['+_']">
+                        Is there a daily limit?
+                    </summary>
+                    <p class="mt-4 text-base text-slate-700">
+                        No daily limits, use as much as you need.
+                    </p>
+                </details>
+            </div>
+        </section>
+    </article>
+</main>
+{{ end }}
