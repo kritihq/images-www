@@ -17,29 +17,31 @@
             class="w-3/4 max-lg:w-full mx-auto p-8 max-sm:p-2"
         >
             {{ range .CurrentSection.Pages }}
-            <p class="mb-8 text-sm text-blue-600 uppercase">
-                {{ .Params.Title }}
-            </p>
-            <menu
-                class="list-none grid grid-cols-3 max-sm:grid-cols-1 gap-8 auto-rows-fr rounded-md"
-            >
-                {{ range (.Pages) }}
-                <li
-                    class="min-h-[150px] p-2 hover:bg-zinc-300/20 hover:scale-105 border border-zinc-400/20 rounded-md animate-[slideUp_0.5s_ease-out_1_both] wrap-anywhere"
+            <section class="my-10">
+                <p class="mb-6 text-sm text-blue-600 uppercase">
+                    {{ .Params.Title }}
+                </p>
+                <menu
+                    class="list-none grid grid-cols-3 max-sm:grid-cols-1 gap-8 auto-rows-fr rounded-md"
                 >
-                    <a
-                        href="{{ .Permalink }}"
-                        class="h-full w-full inline-block"
+                    {{ range (.Pages) }}
+                    <li
+                        class="min-h-[150px] p-2 hover:bg-zinc-300/20 hover:scale-105 border border-zinc-400/20 rounded-md animate-[slideUp_0.5s_ease-out_1_both] wrap-anywhere"
                     >
-                        <h3
-                            class="text-lg text-slate-600 decoration-none wrap-anywhere"
+                        <a
+                            href="{{ .Permalink }}"
+                            class="h-full w-full inline-block"
                         >
-                            {{ .Title | title }}
-                        </h3>
-                    </a>
-                </li>
-                {{ end }}
-            </menu>
+                            <h3
+                                class="text-lg text-slate-600 decoration-none wrap-anywhere"
+                            >
+                                {{ .Title | title }}
+                            </h3>
+                        </a>
+                    </li>
+                    {{ end }}
+                </menu>
+            </section>
             {{ end }}
         </nav>
         <section
