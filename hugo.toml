@@ -1,6 +1,6 @@
-baseURL = 'https://kriti.directory/'
+baseURL = 'https://kritiimages.com/'
 languageCode = 'en-us'
-title = 'Kriti/ Directory'
+title = 'Kriti/ Images'
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
