@@ -1652,6 +1652,12 @@
       gap: calc(var(--spacing) * 8);
     }
   }
+  .lg\:border-t-0 {
+    @media (width >= 64rem) {
+      border-top-style: var(--tw-border-style);
+      border-top-width: 0px;
+    }
+  }
   .lg\:border-r {
     @media (width >= 64rem) {
       border-right-style: var(--tw-border-style);
@@ -1662,6 +1668,12 @@
     @media (width >= 64rem) {
       border-bottom-style: var(--tw-border-style);
       border-bottom-width: 0px;
+    }
+  }
+  .lg\:border-l {
+    @media (width >= 64rem) {
+      border-left-style: var(--tw-border-style);
+      border-left-width: 1px;
     }
   }
   .lg\:px-4 {
