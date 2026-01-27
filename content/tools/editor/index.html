@@ -1,0 +1,605 @@
+---
+title: Image Editor
+---
+
+<style>
+    /* Custom styles for behaviors Tailwind can't handle */
+    input[type="file"] {
+        display: none;
+    }
+
+    .menu-item svg {
+        position: absolute;
+    }
+    .menu-item small {
+        margin-top: 4em;
+    }
+
+    .uploaded-image-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        background: #222;
+        box-shadow: 0 2px 8px #0004;
+        cursor: pointer;
+        transition: box-shadow 0.2s;
+    }
+
+    .uploaded-image-item img {
+        display: block;
+        width: 100%;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+    }
+
+    .uploaded-image-actions {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .uploaded-image-item:hover .uploaded-image-actions {
+        opacity: 1;
+    }
+
+    .uploaded-image-actions button {
+        padding: 4px 8px;
+        font-size: 12px;
+        background: #4a9eff;
+        border-radius: 4px;
+        border: none;
+        cursor: pointer;
+        color: white;
+        margin: 0;
+    }
+    .uploaded-image-actions button:hover {
+        background: #ff4a4a;
+    }
+
+    #konvaContainer {
+        border: 2px solid #3a3a3a;
+    }
+</style>
+
+<dialog
+    id="dialog_viewJson"
+    closedby="any"
+    class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[25vw] p-6 bg-[#2a2a2a] rounded-lg text-white backdrop:bg-black/50"
+>
+    <p class="whitespace-pre-wrap text-left" disabled></textarea>
+</dialog>
+
+<menu
+    id="ctxMenuParent"
+    class="absolute min-w-[50px] w-[150px] text-white select-none invisible bg-[#222] rounded-xl shadow-[0_12px_35px_rgba(0,0,0,0.1)] z-1000 list-none flex flex-col flex-wrap"
+>
+    <li
+        data-action="moveToTop"
+        class="p-3 hover:bg-[#555] cursor-pointer first:rounded-t-xl last:rounded-b-xl"
+    >
+        Move To Top
+    </li>
+    <li
+        data-action="moveUp"
+        class="p-3 hover:bg-[#555] cursor-pointer first:rounded-t-xl last:rounded-b-xl"
+    >
+        Move Up
+    </li>
+    <li
+        data-action="moveDown"
+        class="p-3 hover:bg-[#555] cursor-pointer first:rounded-t-xl last:rounded-b-xl"
+    >
+        Move Down
+    </li>
+    <li
+        data-action="moveToBottom"
+        class="p-3 hover:bg-[#555] cursor-pointer first:rounded-t-xl last:rounded-b-xl"
+    >
+        Move To Bottom
+    </li>
+</menu>
+
+<nav
+    class="bg-[#2a2a2a] p-3 min-w-fit border-r-2 border-[#3a3a3a] list-none flex flex-row flex-nowrap gap-6 h-screen overflow-y-auto"
+>
+    <menu
+        id="sidebarLeftMini"
+        class="w-24 grow shrink flex flex-col gap-3 list-none p-0"
+    >
+        <li
+            class="menu-item p-2 h-24 aspect-square bg-[#3a3a3a] rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 hover:bg-[#4a4a4a] hover:translate-x-1 active:bg-[#4a9eff] active:text-white"
+            data-panel="project"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path
+                    d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+                />
+                <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                <circle cx="10" cy="12" r="2" />
+                <path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22" />
+            </svg>
+            <small class="text-center">Project</small>
+        </li>
+        <li
+            class="menu-item p-2 h-24 aspect-square bg-[#3a3a3a] rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 hover:bg-[#4a4a4a] hover:translate-x-1 active:bg-[#4a9eff] active:text-white"
+            data-panel="add-image"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path
+                    d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z"
+                />
+                <path d="M14 2v5a1 1 0 0 0 1 1h5" />
+                <circle cx="10" cy="12" r="2" />
+                <path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22" />
+            </svg>
+            <small class="text-center">Add Image</small>
+        </li>
+        <li
+            class="menu-item p-2 h-24 aspect-square bg-[#3a3a3a] rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 hover:bg-[#4a4a4a] hover:translate-x-1 active:bg-[#4a9eff] active:text-white"
+            data-panel="add-text"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="m2 16 4.039-9.69a.5.5 0 0 1 .923 0L11 16" />
+                <path d="M22 9v7" />
+                <path d="M3.304 13h6.392" />
+                <circle cx="18.5" cy="12.5" r="3.5" />
+            </svg>
+            <small class="text-center">Add Text</small>
+        </li>
+        <li
+            class="menu-item p-2 h-24 aspect-square bg-[#3a3a3a] rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 hover:bg-[#4a4a4a] hover:translate-x-1 active:bg-[#4a9eff] active:text-white"
+            data-panel="download"
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M12 15V3" />
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <path d="m7 10 5 5 5-5" />
+            </svg>
+            <small class="text-center">Download</small>
+        </li>
+    </menu>
+
+    <aside
+        id="sidebarLeftExtension"
+        class="w-[15vw] grow shrink hidden"
+        style="display: none"
+    >
+        <button
+            class="sticky left-full cursor-pointer"
+            onclick='this.parentElement.style.display="none";'
+        >
+            <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+            >
+                <path d="M18 6 6 18" />
+                <path d="m6 6 12 12" />
+            </svg>
+        </button>
+
+        <article class="detail-panel hidden [&.active]:block" id="project-panel">
+            <h2 class="mb-5 text-xl text-[#4a9eff]">Base Dimensions</h2>
+
+            <label class="block mt-2.5 text-[13px] text-[#aaa]">Width</label>
+            <input
+                type="number"
+                id="canvas-width-input"
+                min="1"
+                value="1"
+                class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
+            />
+
+            <label class="block mt-2.5 text-[13px] text-[#aaa]">Height</label>
+            <input
+                type="number"
+                id="canvas-height-input"
+                min="1"
+                value="1"
+                class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
+            />
+
+            <button
+                id="resize-canvas-btn"
+                class="w-full p-2.5 my-1 bg-[#4a9eff] text-white border-none rounded cursor-pointer text-sm hover:bg-[#3a7ed8]"
+            >
+                Resize
+            </button>
+
+            <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+
+            <!--<h2 class="mb-5 text-xl text-[#4a9eff]">Instagram</h2>
+            <menu
+                id="aspectRatioMenu"
+                class="flex flex-row flex-wrap items-center justify-start gap-3 list-none p-0"
+            >
+                <li
+                    data-width="1080"
+                    data-height="1080"
+                    class="min-w-16 px-2.5 py-4 rounded-lg text-center hover:bg-[#555] cursor-pointer"
+                >
+                    Post
+                    <small class="mt-2 block text-[0.8rem]">1080x1080</small>
+                </li>
+                <li
+                    data-width="1080"
+                    data-height="1920"
+                    class="min-w-16 px-2.5 py-4 rounded-lg text-center hover:bg-[#555] cursor-pointer"
+                >
+                    Story
+                    <small class="mt-2 block text-[0.8rem]">1080x1920</small>
+                </li>
+                <li
+                    data-width="1080"
+                    data-height="1080"
+                    class="min-w-16 px-2.5 py-4 rounded-lg text-center hover:bg-[#555] cursor-pointer"
+                >
+                    Ad <small class="mt-2 block text-[0.8rem]">1080x1080</small>
+                </li>
+            </menu>
+
+            <h2 class="mb-5 text-xl text-[#4a9eff]">Twitter</h2>
+            <menu
+                class="flex flex-row flex-wrap items-center justify-start gap-3 list-none p-0"
+            >
+                <li
+                    data-width="1600"
+                    data-height="900"
+                    class="min-w-16 px-2.5 py-4 rounded-lg text-center hover:bg-[#555] cursor-pointer"
+                >
+                    Post
+                    <small class="mt-2 block text-[0.8rem]">1600x900</small>
+                </li>
+                <li
+                    data-width="1500"
+                    data-height="1500"
+                    class="min-w-16 px-2.5 py-4 rounded-lg text-center hover:bg-[#555] cursor-pointer"
+                >
+                    Header
+                    <small class="mt-2 block text-[0.8rem]">1500x1500</small>
+                </li>
+                <li
+                    data-width="1080"
+                    data-height="1080"
+                    class="min-w-16 px-2.5 py-4 rounded-lg text-center hover:bg-[#555] cursor-pointer"
+                >
+                    Square
+                    <small class="mt-2 block text-[0.8rem]">1080x1080</small>
+                </li>
+            </menu>-->
+        </article>
+
+        <article class="detail-panel hidden [&.active]:block" id="add-image-panel">
+            <h2 class="mb-5 text-xl text-[#4a9eff]">Add Image</h2>
+            <label
+                for="imageUpload"
+                class="block w-full p-2.5 my-1 bg-[#4a9eff] text-white rounded cursor-pointer text-center text-sm hover:bg-[#3a7ed8]"
+            >
+                Upload Image
+            </label>
+            <input type="file" id="imageUpload" accept="image/*" />
+
+            <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+
+            <h2 class="mb-5 text-xl text-[#4a9eff]">Uploaded Images</h2>
+            <ul
+                id="uploadedImagesGrid"
+                class="grid grid-cols-2 gap-3 mt-3"
+            ></ul>
+        </article>
+
+        <article
+            class="detail-panel hidden [&.active]:block"
+            id="adjust-image-panel"
+        >
+            <section id="div_adjustFilters" class="hidden">
+                <h2 class="mb-5 text-xl text-[#4a9eff]">Quick Filters</h2>
+                <div
+                    id="div_adjustQuickFilters"
+                    class="grid grid-cols-2 gap-2 mb-5"
+                >
+                    <button
+                        class="p-2 text-xs bg-[#3a3a3a] text-white border-none rounded cursor-pointer hover:bg-[#4a4a4a] active:bg-[#4a9eff]"
+                        data-filter="none"
+                    >
+                        Original
+                    </button>
+                    <button
+                        class="p-2 text-xs bg-[#3a3a3a] text-white border-none rounded cursor-pointer hover:bg-[#4a4a4a] active:bg-[#4a9eff]"
+                        data-filter="grayscale"
+                    >
+                        B&W
+                    </button>
+                    <button
+                        class="p-2 text-xs bg-[#3a3a3a] text-white border-none rounded cursor-pointer hover:bg-[#4a4a4a] active:bg-[#4a9eff]"
+                        data-filter="sepia"
+                    >
+                        Sepia
+                    </button>
+                    <button
+                        class="p-2 text-xs bg-[#3a3a3a] text-white border-none rounded cursor-pointer hover:bg-[#4a4a4a] active:bg-[#4a9eff]"
+                        data-filter="invert"
+                    >
+                        Invert
+                    </button>
+                    <button
+                        class="p-2 text-xs bg-[#3a3a3a] text-white border-none rounded cursor-pointer hover:bg-[#4a4a4a] active:bg-[#4a9eff]"
+                        data-filter="vintage"
+                    >
+                        Vintage
+                    </button>
+                    <button
+                        class="p-2 text-xs bg-[#3a3a3a] text-white border-none rounded cursor-pointer hover:bg-[#4a4a4a] active:bg-[#4a9eff]"
+                        data-filter="cool"
+                    >
+                        Cool
+                    </button>
+                    <button
+                        class="p-2 text-xs bg-[#3a3a3a] text-white border-none rounded cursor-pointer hover:bg-[#4a4a4a] active:bg-[#4a9eff]"
+                        data-filter="warm"
+                    >
+                        Warm
+                    </button>
+                    <button
+                        class="p-2 text-xs bg-[#3a3a3a] text-white border-none rounded cursor-pointer hover:bg-[#4a4a4a] active:bg-[#4a9eff]"
+                        data-filter="dramatic"
+                    >
+                        Dramatic
+                    </button>
+                </div>
+
+                <h2 class="mb-5 text-xl text-[#4a9eff]">Filters</h2>
+                <label class="block mt-2.5 text-[13px] text-[#aaa]">
+                    Brightness
+                    <span
+                        class="inline-block ml-2.5 text-[#4a9eff]"
+                        id="brightnessVal"
+                        >0</span
+                    >
+                </label>
+                <input
+                    type="range"
+                    id="brightness"
+                    min="-100"
+                    max="100"
+                    value="0"
+                    class="w-full my-2.5"
+                />
+
+                <label class="block mt-2.5 text-[13px] text-[#aaa]">
+                    Contrast<span
+                        class="inline-block ml-2.5 text-[#4a9eff]"
+                        id="contrastVal"
+                        >0</span
+                    >
+                </label>
+                <input
+                    type="range"
+                    id="contrast"
+                    min="-100"
+                    max="100"
+                    value="0"
+                    class="w-full my-2.5"
+                />
+
+                <label class="block mt-2.5 text-[13px] text-[#aaa]">
+                    Blur<span
+                        class="inline-block ml-2.5 text-[#4a9eff]"
+                        id="blurVal"
+                        >0</span
+                    >
+                </label>
+                <input
+                    type="range"
+                    id="blur"
+                    min="0"
+                    max="20"
+                    value="0"
+                    class="w-full my-2.5"
+                />
+
+                <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+            </section>
+
+            <!--<section id="div_adjustImage" class="hidden">
+                <h2 class="mb-5 text-xl text-[#4a9eff]">Adjustments</h2>
+                <input
+                    id="input_adjustText"
+                    type="text"
+                    placeholder="Enter text"
+                    class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
+                />
+
+                <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+            </section>-->
+
+            <section id="div_adjustText" class="hidden">
+                <h2 class="mb-5 text-xl text-[#4a9eff]">Adjustments</h2>
+                <input
+                    id="input_adjustText"
+                    type="text"
+                    placeholder="Enter text"
+                    class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
+                />
+
+                <label class="block mt-2.5 text-[13px] text-[#aaa]"
+                    >Font Family</label
+                >
+                <select
+                    id="select_fontFamily"
+                    class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
+                >
+                    <option value="Arial">Arial</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Impact">Impact</option>
+                </select>
+
+                <label class="block mt-2.5 text-[13px] text-[#aaa]"
+                    >Font Size</label
+                >
+                <input
+                    id="input_fontSize"
+                    type="number"
+                    value="24"
+                    min="8"
+                    max="200"
+                    class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
+                />
+
+                <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+            </section>
+
+            <section id="div_adjustAdjust" class="hidden">
+                <h2 class="mb-5 text-xl text-[#4a9eff]">Adjustments</h2>
+                <label class="block mt-2.5 text-[13px] text-[#aaa]"
+                    >Rotation<span
+                        class="inline-block ml-2.5 text-[#4a9eff]"
+                        id="rotationVal"
+                        >0</span
+                    ></label
+                >
+                <input
+                    type="range"
+                    id="rotation"
+                    min="-360"
+                    max="360"
+                    value="0"
+                    class="w-full my-2.5"
+                />
+
+                <label class="block mt-2.5 text-[13px] text-[#aaa]">
+                    Border Radius
+                    <span
+                        class="inline-block ml-2.5 text-[#4a9eff]"
+                        id="borderRadiusVal"
+                        >0</span
+                    >
+                </label>
+                <input
+                    type="range"
+                    id="borderRadius"
+                    min="0"
+                    max="50"
+                    value="0"
+                    class="w-full my-2.5"
+                />
+
+                <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+            </section>
+        </article>
+
+        <article class="detail-panel hidden [&.active]:block" id="add-text-panel">
+            <h2 class="mb-5 text-xl text-[#4a9eff]">Text Properties</h2>
+            <button
+                id="addTextBtn"
+                class="w-full p-2.5 my-1 bg-[#4a9eff] text-white border-none rounded cursor-pointer text-sm hover:bg-[#3a7ed8]"
+            >
+                Add Text
+            </button>
+        </article>
+
+        <article class="detail-panel hidden [&.active]:block" id="download-panel">
+            <h2 class="mb-5 text-xl text-[#4a9eff]">Download Image</h2>
+            <label class="block mt-2.5 text-[13px] text-[#aaa]">
+                Export Size:
+                <span id="export-size-label"></span>
+            </label>
+            <input
+                type="range"
+                id="export-size-slider"
+                min="216"
+                max="4500"
+                value="1080"
+                step="1"
+                class="w-full mb-2.5"
+            />
+            <button
+                id="downloadBtn"
+                class="w-full p-2.5 my-1 bg-[#4a9eff] text-white border-none rounded cursor-pointer text-sm hover:bg-[#3a7ed8]"
+            >
+                Download as PNG
+            </button>
+            <button
+                id="btn_viewJson"
+                onclick='dialog_viewJson.querySelector("p").textContent = exportToJSON(); dialog_viewJson.showModal();'
+                class="w-full p-2.5 my-1 bg-[#4a9eff] text-white border-none rounded cursor-pointer text-sm hover:bg-[#3a7ed8]"
+            >
+                View JSON
+            </button>
+        </article>
+    </aside>
+</nav>
+
+<div class="flex-1 flex items-center justify-center bg-[#0f0f0f]">
+    <div id="konvaContainer"></div>
+</div>
+
+<div id="zoom-controls" class="fixed bottom-6 right-6 z-1000 flex gap-2">
+    <button
+        id="zoom-out-btn"
+        class="text-xs p-3.5 rounded-full bg-[#222] text-white border-none shadow-[0_2px_8px_rgba(0,0,0,0.13)] cursor-pointer hover:bg-[#333]"
+    >
+        -
+    </button>
+    <button
+        id="zoom-in-btn"
+        class="text-xs p-3.5 rounded-full bg-[#222] text-white border-none shadow-[0_2px_8px_rgba(0,0,0,0.13)] cursor-pointer hover:bg-[#333]"
+    >
+        +
+    </button>
+</div>
