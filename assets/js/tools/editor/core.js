@@ -32,9 +32,29 @@ function addImage(layer, img, name) {
   layer.draw();
 
   // custom attrs
-  konvaImg.setAttrs({ path: name });
+  const attrs = {
+    path: name,
+  };
+  konvaImg.setAttrs(attrs);
 
   return konvaImg;
+}
+
+function embedVariablesToImage(node, { path }) {
+  if (!node || node.getClassName() != "Image") {
+    return;
+  }
+
+  const defaults = node.getAttr("defaults") || {};
+  if (path) {
+    if (!defaults.path) {
+      // first time converting path to variable
+      defaults.path = node.getAttr("path");
+      node.setAttrs({ defaults });
+    }
+
+    node.setAttrs({ path });
+  }
 }
 
 function addText(layer, text, fontFamily, fontSize) {

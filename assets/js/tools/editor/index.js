@@ -110,18 +110,21 @@ function selectNode(node) {
   transformer.moveToTop();
 
   if (node.getClassName() === "Image") {
+    setImageMetadata(getImageMetadata(selectedNode));
     const { type, filters } = getFilters(selectedNode);
     setFilterUIVals(type, filters);
     const { rotation } = getTransformation(selectedNode);
     setUIValRotation(rotation);
     // div_adjustFilters.style.display = "block";
     div_adjustAdjust.style.display = "block";
+    div_metaImage.style.display = "block";
     div_adjustText.style.display = "none";
   } else if (node.getClassName() === "Text") {
     setUIValFontFamily(node.fontFamily());
     setUIValFontSize(node.fontSize());
     setUIValAdjustText(node.text());
     // div_adjustFilters.style.display = "none";
+    div_metaImage.style.display = "none";
     div_adjustAdjust.style.display = "block";
     div_adjustText.style.display = "block";
   }
@@ -146,6 +149,29 @@ stage.on("click", (e) => {
     layer.draw();
   }
 });
+
+// Meta data
+function setImageMetadata({ name }) {
+  input_imageName.value = name.value || name.default;
+  if (name.default) {
+    // image name is variable
+    text_imageNameDefault.textContent = name.default || "";
+    input_imageName.disabled = false;
+  }
+}
+
+function getImageMetadata(node) {
+  if (!node || node.getClassName() != "Image") {
+    return;
+  }
+  const data = {};
+  data.name = {
+    default: node.getAttr("defaults")?.path || "",
+    value: node.getAttr("path") || "",
+  };
+
+  return data;
+}
 
 // Quick Filters
 const filterButtons = document.querySelectorAll(".filter-btn");
@@ -428,3 +454,19 @@ function exportToJSON() {
   const jsonStr = exportToJSONWithVariablePlaceholders(stage);
   return JSON.stringify(JSON.parse(jsonStr), null, 4);
 }
+
+// Variables
+function convertImageToVariable() {
+  if (!selectedNode || selectedNode.getClassName() != "Image") {
+    return;
+  }
+
+  input_imageName.disabled = false;
+  input_imageName.value = "";
+  input_imageName.placeholder = "Enter variable id";
+}
+
+input_imageName.addEventListener("input", (e) => {
+  const imageName = e.target.value;
+  embedVariablesToImage(selectedNode, { path: imageName });
+});

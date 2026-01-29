@@ -106,7 +106,7 @@ title: Image Editor
 </menu>
 
 <nav
-    class="bg-[#2a2a2a] p-3 min-w-fit border-r-2 border-[#3a3a3a] list-none flex flex-row flex-nowrap gap-6 h-screen overflow-y-auto"
+    class="p-3 min-w-fit border-r-2 list-none flex flex-row flex-nowrap gap-6 h-screen overflow-y-auto"
 >
     <menu
         id="sidebarLeftMini"
@@ -453,17 +453,25 @@ title: Image Editor
                 <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
             </section>
 
-            <!--<section id="div_adjustImage" class="hidden">
-                <h2 class="mb-5 text-xl text-[#4a9eff]">Adjustments</h2>
-                <input
-                    id="input_adjustText"
-                    type="text"
-                    placeholder="Enter text"
-                    class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
-                />
-
+            <section id="div_metaImage" class="hidden">
+                <h2 class="mb-5 text-xl text-[#4a9eff]">Image</h2>
+                <div role="group" class="field">
+                    <section class="w-full flex flex-row no-wrap items-center justify-between">
+                        <label for="input_imageName">Name</label>
+                        <button
+                            id="btn_imageToVar"
+                            onclick="convertImageToVariable()"
+                            class="btn-icon-ghost text-muted-foreground hover:text-accent-foreground"
+                            title="Convert Image to Variable"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cable-icon lucide-cable"><path d="M17 19a1 1 0 0 1-1-1v-2a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2a1 1 0 0 1-1 1z"/><path d="M17 21v-2"/><path d="M19 14V6.5a1 1 0 0 0-7 0v11a1 1 0 0 1-7 0V10"/><path d="M21 21v-2"/><path d="M3 5V3"/><path d="M4 10a2 2 0 0 1-2-2V6a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2a2 2 0 0 1-2 2z"/><path d="M7 5V3"/></svg>
+                        </button>
+                    </section>
+                    <input type="text" class="input pr-9" id="input_imageName" disabled>
+                    <small id="text_imageNameDefault"></small>
+                </div>
                 <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
-            </section>-->
+            </section>
 
             <section id="div_adjustText" class="hidden">
                 <h2 class="mb-5 text-xl text-[#4a9eff]">Adjustments</h2>

@@ -1,0 +1,23 @@
+<!doctype html>
+<html
+    lang="{{ site.Language.LanguageCode }}"
+    dir="{{ or site.Language.LanguageDirection `ltr` }}"
+    class="max-w-screen overflow-x-hidden"
+>
+    <head>
+        {{ partial "head.html" . }}
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.10/dist/basecoat.cdn.min.css"
+        />
+        <script
+            src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.10/dist/js/all.min.js"
+            defer
+        ></script>
+    </head>
+    <body
+        class="min-h-screen bg-zinc-200 grid grid-rows-[min-content_1fr_auto] auto-cols-fr"
+    >
+        {{ block "main" . }}{{ end }}
+    </body>
+</html>
