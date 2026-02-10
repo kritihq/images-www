@@ -11,7 +11,7 @@ function init() {
   const layer = new Konva.Layer();
   stage.add(layer);
 
-  let transformer = new Konva.Transformer();
+  let transformer = new Konva.Transformer({ rotationSnaps: [0, 90, 180, 270] });
   layer.add(transformer);
 
   return { stage, layer, transformer };
@@ -53,7 +53,7 @@ function embedVariablesToImage(node, { path }) {
       node.setAttrs({ defaults });
     }
 
-    node.setAttrs({ path });
+    node.setAttrs({ path: path.replace(/\{\{\s*(.*?)\s*\}\}/g, "{{ .$1 }}") });
   }
 }
 
@@ -83,7 +83,7 @@ function updateText(selectedNode, text, fontFamily, fontSize) {
   if (!selectedNode.getClassName() === "Text") return;
 
   if (text) {
-    selectedNode.text(text);
+    selectedNode.text(text.replace(/\{\{\s*(.*?)\s*\}\}/g, "{{ .$1 }}"));
   }
   selectedNode.fontFamily(fontFamily);
   selectedNode.fontSize(fontSize);

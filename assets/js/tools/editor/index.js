@@ -113,12 +113,12 @@ function selectNode(node) {
     setImageMetadata(getImageMetadata(selectedNode));
     const { type, filters } = getFilters(selectedNode);
     setFilterUIVals(type, filters);
-    const { rotation } = getTransformation(selectedNode);
-    setUIValRotation(rotation);
+    // const { rotation } = getTransformation(selectedNode);
+    // setUIValRotation(rotation);
     // div_adjustFilters.style.display = "block";
     div_adjustAdjust.style.display = "block";
     div_metaImage.style.display = "block";
-    div_adjustText.style.display = "none";
+    div_metaText.style.display = "none";
   } else if (node.getClassName() === "Text") {
     setUIValFontFamily(node.fontFamily());
     setUIValFontSize(node.fontSize());
@@ -126,7 +126,7 @@ function selectNode(node) {
     // div_adjustFilters.style.display = "none";
     div_metaImage.style.display = "none";
     div_adjustAdjust.style.display = "block";
-    div_adjustText.style.display = "block";
+    div_metaText.style.display = "block";
   }
 
   showMenuSidebar("adjust-image-panel");
@@ -261,17 +261,18 @@ function setUIValBlur(val) {
   document.getElementById("blur").value = val;
 }
 
+// TODO: Konva has internal rotation mechanics
 // Rotate
-document.getElementById("rotation").addEventListener("input", (e) => {
-  document.getElementById("rotationVal").textContent = e.target.value;
-});
-document.getElementById("rotation").addEventListener("change", (e) => {
-  rotate(selectedNode, e.target.value);
-});
-function setUIValRotation(val) {
-  document.getElementById("rotationVal").textContent = val;
-  document.getElementById("rotation").value = val;
-}
+// document.getElementById("rotation").addEventListener("input", (e) => {
+//   document.getElementById("rotationVal").textContent = e.target.value;
+// });
+// document.getElementById("rotation").addEventListener("change", (e) => {
+//   rotate(selectedNode, e.target.value);
+// });
+// function setUIValRotation(val) {
+//   document.getElementById("rotationVal").textContent = val;
+//   document.getElementById("rotation").value = val;
+// }
 
 // Border Radius
 document.getElementById("borderRadius").addEventListener("input", (e) => {

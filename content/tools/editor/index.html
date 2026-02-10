@@ -77,43 +77,43 @@ title: Image Editor
 
 <menu
     id="ctxMenuParent"
-    class="absolute min-w-[50px] w-[150px] text-white select-none invisible bg-[#222] rounded-xl shadow-[0_12px_35px_rgba(0,0,0,0.1)] z-1000 list-none flex flex-col flex-wrap"
+    class="absolute min-w-[50px] w-[150px] bg-neutral-300 select-none invisible rounded-xl shadow-xs z-1000 list-none flex flex-col flex-wrap"
 >
     <li
         data-action="moveToTop"
-        class="p-3 hover:bg-[#555] cursor-pointer first:rounded-t-xl last:rounded-b-xl"
+        class="p-3 hover:bg-neutral-400 cursor-pointer first:rounded-t-xl last:rounded-b-xl"
     >
         Move To Top
     </li>
     <li
         data-action="moveUp"
-        class="p-3 hover:bg-[#555] cursor-pointer first:rounded-t-xl last:rounded-b-xl"
+        class="p-3 hover:bg-neutral-400 cursor-pointer first:rounded-t-xl last:rounded-b-xl"
     >
         Move Up
     </li>
     <li
         data-action="moveDown"
-        class="p-3 hover:bg-[#555] cursor-pointer first:rounded-t-xl last:rounded-b-xl"
+        class="p-3 hover:bg-neutral-400 cursor-pointer first:rounded-t-xl last:rounded-b-xl"
     >
         Move Down
     </li>
     <li
         data-action="moveToBottom"
-        class="p-3 hover:bg-[#555] cursor-pointer first:rounded-t-xl last:rounded-b-xl"
+        class="p-3 hover:bg-neutral-400 cursor-pointer first:rounded-t-xl last:rounded-b-xl"
     >
         Move To Bottom
     </li>
 </menu>
 
 <nav
-    class="p-3 min-w-fit border-r-2 list-none flex flex-row flex-nowrap gap-6 h-screen overflow-y-auto"
+    class="p-3 min-w-fit bg-neutral-300 border-r-2 list-none flex flex-row flex-nowrap gap-6 h-screen overflow-y-auto"
 >
     <menu
         id="sidebarLeftMini"
         class="w-24 grow shrink flex flex-col gap-3 list-none p-0"
     >
         <li
-            class="menu-item p-2 h-24 aspect-square bg-[#3a3a3a] rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 hover:bg-[#4a4a4a] hover:translate-x-1 active:bg-[#4a9eff] active:text-white"
+            class="menu-item p-2 h-24 aspect-square rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 bg-neutral-300 hover:bg-neutral-400 hover:translate-x-1"
             data-panel="project"
         >
             <svg
@@ -137,7 +137,7 @@ title: Image Editor
             <small class="text-center">Project</small>
         </li>
         <li
-            class="menu-item p-2 h-24 aspect-square bg-[#3a3a3a] rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 hover:bg-[#4a4a4a] hover:translate-x-1 active:bg-[#4a9eff] active:text-white"
+            class="menu-item p-2 h-24 aspect-square rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 bg-neutral-300 hover:bg-neutral-400 hover:translate-x-1"
             data-panel="add-image"
         >
             <svg
@@ -161,7 +161,7 @@ title: Image Editor
             <small class="text-center">Add Image</small>
         </li>
         <li
-            class="menu-item p-2 h-24 aspect-square bg-[#3a3a3a] rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 hover:bg-[#4a4a4a] hover:translate-x-1 active:bg-[#4a9eff] active:text-white"
+            class="menu-item p-2 h-24 aspect-square rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 bg-neutral-300 hover:bg-neutral-400 hover:translate-x-1"
             data-panel="add-text"
         >
             <svg
@@ -183,7 +183,7 @@ title: Image Editor
             <small class="text-center">Add Text</small>
         </li>
         <li
-            class="menu-item p-2 h-24 aspect-square bg-[#3a3a3a] rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 hover:bg-[#4a4a4a] hover:translate-x-1 active:bg-[#4a9eff] active:text-white"
+            class="menu-item p-2 h-24 aspect-square rounded-lg cursor-pointer transition-all duration-300 flex flex-row flex-wrap items-center justify-center gap-3 bg-neutral-300 hover:bg-neutral-400 hover:translate-x-1"
             data-panel="download"
         >
             <svg
@@ -231,34 +231,23 @@ title: Image Editor
         </button>
 
         <article class="detail-panel hidden [&.active]:block" id="project-panel">
-            <h2 class="mb-5 text-xl text-[#4a9eff]">Base Dimensions</h2>
+            <h2 class="text-xl text-blue-600">Base Dimensions</h2>
 
-            <label class="block mt-2.5 text-[13px] text-[#aaa]">Width</label>
-            <input
-                type="number"
-                id="canvas-width-input"
-                min="1"
-                value="1"
-                class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
-            />
+            <div class="grid gap-3 mt-6">
+              <label for="canvas-width-input" class="label">Width</label>
+              <input class="input" id="canvas-width-input" type="number" min="1" value="1">
+              <p class="text-muted-foreground text-sm">Image width in pixels.</p>
+            </div>
 
-            <label class="block mt-2.5 text-[13px] text-[#aaa]">Height</label>
-            <input
-                type="number"
-                id="canvas-height-input"
-                min="1"
-                value="1"
-                class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
-            />
+            <div class="grid gap-3 mt-6">
+              <label for="canvas-height-input" class="label">Height</label>
+              <input class="input" id="canvas-height-input" type="number" min="1" value="1">
+              <p class="text-muted-foreground text-sm">Image height in pixels.</p>
+            </div>
 
-            <button
-                id="resize-canvas-btn"
-                class="w-full p-2.5 my-1 bg-[#4a9eff] text-white border-none rounded cursor-pointer text-sm hover:bg-[#3a7ed8]"
-            >
-                Resize
-            </button>
+            <button class="btn mt-6 w-full" id="resize-canvas-btn">Resize</button>
 
-            <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+            <!--<hr class="h-px bg-[#3a3a3a] my-6 border-none" />-->
 
             <!--<h2 class="mb-5 text-xl text-[#4a9eff]">Instagram</h2>
             <menu
@@ -322,22 +311,54 @@ title: Image Editor
         </article>
 
         <article class="detail-panel hidden [&.active]:block" id="add-image-panel">
-            <h2 class="mb-5 text-xl text-[#4a9eff]">Add Image</h2>
-            <label
-                for="imageUpload"
-                class="block w-full p-2.5 my-1 bg-[#4a9eff] text-white rounded cursor-pointer text-center text-sm hover:bg-[#3a7ed8]"
-            >
-                Upload Image
-            </label>
-            <input type="file" id="imageUpload" accept="image/*" />
+            <h2 class="text-xl text-blue-600">Add Image</h2>
 
-            <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+            <div class="grid gap-3 mt-6">
+              <label for="imageUpload" class="label btn">Upload</label>
+              <input class="input" id="imageUpload" type="file" accept="image/*">
+              <p class="text-muted-foreground text-sm">Upload images to edit.</p>
+            </div>
 
-            <h2 class="mb-5 text-xl text-[#4a9eff]">Uploaded Images</h2>
+            <hr class="h-px bg-neutral-600 my-6 border-none" />
+
+            <h2 class="text-xl text-blue-600">All Images</h2>
             <ul
                 id="uploadedImagesGrid"
                 class="grid grid-cols-2 gap-3 mt-3"
             ></ul>
+        </article>
+
+        <article class="detail-panel hidden [&.active]:block" id="add-text-panel">
+            <h2 class="text-xl text-blue-600">Text Properties</h2>
+            <button class="btn w-full mt-6" id="addTextBtn">Add Text</button>
+        </article>
+
+        <article class="detail-panel hidden [&.active]:block" id="download-panel">
+            <h2 class="text-xl text-blue-600">Download Image</h2>
+
+            <!-- TODO: unhide when export slider is fixed, it does not update stage dimensions -->
+            <div class="grid gap-3 mt-6 hidden">
+                <label class="label gap-3" for="export-size-slider">
+                    Export Size:
+                    <span id="export-size-label"></span>
+                </label>
+                <input class="input w-full" id="export-size-slider" type="range" min="216" max="4500" value="1080" step="1">
+            </div>
+
+            <div role="group" class="button-group mt-6 w-full">
+                <button class="btn" id="downloadBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-download-icon lucide-download"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></svg>
+                    PNG
+                </button>
+                <hr role="separator" />
+                <button class="btn"
+                    id="btn_viewJson"
+                    onclick='dialog_viewJson.querySelector("p").textContent = exportToJSON(); dialog_viewJson.showModal();'
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-braces-icon lucide-braces"><path d="M8 3H7a2 2 0 0 0-2 2v5a2 2 0 0 1-2 2 2 2 0 0 1 2 2v5c0 1.1.9 2 2 2h1"/><path d="M16 21h1a2 2 0 0 0 2-2v-5c0-1.1.9-2 2-2a2 2 0 0 1-2-2V5a2 2 0 0 0-2-2h-1"/></svg>
+                    JSON
+                </button>
+            </div>
         </article>
 
         <article
@@ -345,7 +366,7 @@ title: Image Editor
             id="adjust-image-panel"
         >
             <section id="div_adjustFilters" class="hidden">
-                <h2 class="mb-5 text-xl text-[#4a9eff]">Quick Filters</h2>
+                <h2 class="text-xl text-blue-600">Quick Filters</h2>
                 <div
                     id="div_adjustQuickFilters"
                     class="grid grid-cols-2 gap-2 mb-5"
@@ -454,8 +475,8 @@ title: Image Editor
             </section>
 
             <section id="div_metaImage" class="hidden">
-                <h2 class="mb-5 text-xl text-[#4a9eff]">Image</h2>
-                <div role="group" class="field">
+                <h2 class="text-xl text-blue-600">Image</h2>
+                <div role="group" class="field mt-6">
                     <section class="w-full flex flex-row no-wrap items-center justify-between">
                         <label for="input_imageName">Name</label>
                         <button
@@ -470,144 +491,107 @@ title: Image Editor
                     <input type="text" class="input pr-9" id="input_imageName" disabled>
                     <small id="text_imageNameDefault"></small>
                 </div>
-                <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+                <hr class="h-px bg-neutral-600 my-6 border-none" />
             </section>
 
-            <section id="div_adjustText" class="hidden">
-                <h2 class="mb-5 text-xl text-[#4a9eff]">Adjustments</h2>
-                <input
-                    id="input_adjustText"
-                    type="text"
-                    placeholder="Enter text"
-                    class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
-                />
+            <section id="div_metaText" class="hidden">
+                <h2 class="text-xl text-blue-600">Text</h2>
 
-                <label class="block mt-2.5 text-[13px] text-[#aaa]"
-                    >Font Family</label
-                >
-                <select
-                    id="select_fontFamily"
-                    class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
-                >
-                    <option value="Arial">Arial</option>
-                    <option value="Verdana">Verdana</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    <option value="Courier New">Courier New</option>
-                    <option value="Georgia">Georgia</option>
-                    <option value="Impact">Impact</option>
-                </select>
+                <div class="grid gap-3 mt-6">
+                    <label for="input_adjustText" class="label">Text</label>
+                    <textarea class="textarea" id="input_adjustText" placeholder="Type your message here"></textarea>
+                    <p class="text-muted-foreground text-sm">Edit text here, use braces for variables e.g. {{ var_name }}.</p>
+                </div>
 
-                <label class="block mt-2.5 text-[13px] text-[#aaa]"
-                    >Font Size</label
-                >
-                <input
-                    id="input_fontSize"
-                    type="number"
-                    value="24"
-                    min="8"
-                    max="200"
-                    class="w-full p-2 my-1 bg-[#3a3a3a] border border-[#4a4a4a] rounded text-white text-sm"
-                />
+                <div class="grid gap-3 mt-6">
+                    <label for="select_fontFamily" class="label">Family</label>
+                    <select id="select_fontFamily" class="select w-full">
+                        <option value="Arial">Arial</option>
+                        <option value="Verdana">Verdana</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                        <option value="Courier New">Courier New</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Impact">Impact</option>
+                    </select>
+                    <p class="text-muted-foreground text-sm">Select font family.</p>
+                </div>
 
-                <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+                <div class="grid gap-3 mt-6">
+                    <label for="input_fontSize" class="label">Size</label>
+                    <input class="input" id="input_fontSize" type="number" min="8" max="1000" value="24">
+                    <p class="text-muted-foreground text-sm">Enter font size.</p>
+                </div>
+
+                <hr class="h-px bg-neutral-600 my-6 border-none" />
             </section>
 
             <section id="div_adjustAdjust" class="hidden">
-                <h2 class="mb-5 text-xl text-[#4a9eff]">Adjustments</h2>
-                <label class="block mt-2.5 text-[13px] text-[#aaa]"
-                    >Rotation<span
-                        class="inline-block ml-2.5 text-[#4a9eff]"
-                        id="rotationVal"
-                        >0</span
-                    ></label
-                >
-                <input
-                    type="range"
-                    id="rotation"
-                    min="-360"
-                    max="360"
-                    value="0"
-                    class="w-full my-2.5"
-                />
+                <h2 class="text-xl text-blue-600">Adjustments</h2>
 
-                <label class="block mt-2.5 text-[13px] text-[#aaa]">
-                    Border Radius
-                    <span
-                        class="inline-block ml-2.5 text-[#4a9eff]"
-                        id="borderRadiusVal"
-                        >0</span
-                    >
-                </label>
-                <input
-                    type="range"
-                    id="borderRadius"
-                    min="0"
-                    max="50"
-                    value="0"
-                    class="w-full my-2.5"
-                />
+                <!-- TODO: konva provide rotation on its transformer, not needed -->
+                <!--<div class="grid gap-3 mt-6">
+                    <label class="label gap-3" for="rotation">
+                        Rotation
+                        <span id="rotationVal">0</span>
+                    </label>
+                    <input class="input w-full" id="rotation" type="range" min="-360" max="360" value="0">
+                </div>-->
 
-                <hr class="h-px bg-[#3a3a3a] my-6 border-none" />
+                <div class="grid gap-3 mt-6">
+                    <label class="label gap-3" for="borderRadius">
+                        Boder Radius
+                        <span id="borderRadiusVal">0%</span>
+                    </label>
+                    <input class="input w-full" id="borderRadius" type="range" min="0" max="50" value="0">
+                </div>
+
+                <hr class="h-px bg-neutral-600 my-6 border-none" />
             </section>
         </article>
-
-        <article class="detail-panel hidden [&.active]:block" id="add-text-panel">
-            <h2 class="mb-5 text-xl text-[#4a9eff]">Text Properties</h2>
-            <button
-                id="addTextBtn"
-                class="w-full p-2.5 my-1 bg-[#4a9eff] text-white border-none rounded cursor-pointer text-sm hover:bg-[#3a7ed8]"
-            >
-                Add Text
-            </button>
-        </article>
-
-        <article class="detail-panel hidden [&.active]:block" id="download-panel">
-            <h2 class="mb-5 text-xl text-[#4a9eff]">Download Image</h2>
-            <label class="block mt-2.5 text-[13px] text-[#aaa]">
-                Export Size:
-                <span id="export-size-label"></span>
-            </label>
-            <input
-                type="range"
-                id="export-size-slider"
-                min="216"
-                max="4500"
-                value="1080"
-                step="1"
-                class="w-full mb-2.5"
-            />
-            <button
-                id="downloadBtn"
-                class="w-full p-2.5 my-1 bg-[#4a9eff] text-white border-none rounded cursor-pointer text-sm hover:bg-[#3a7ed8]"
-            >
-                Download as PNG
-            </button>
-            <button
-                id="btn_viewJson"
-                onclick='dialog_viewJson.querySelector("p").textContent = exportToJSON(); dialog_viewJson.showModal();'
-                class="w-full p-2.5 my-1 bg-[#4a9eff] text-white border-none rounded cursor-pointer text-sm hover:bg-[#3a7ed8]"
-            >
-                View JSON
-            </button>
-        </article>
     </aside>
+
+    <!--<label class="label ">
+      <input type="checkbox" name="switch" role="switch" class="input" onclick="document.documentElement.classList.toggle('dark');">
+      Dark Mode
+    </label>-->
 </nav>
 
-<div class="flex-1 flex items-center justify-center bg-[#0f0f0f]">
+<div class="flex-1 flex items-center justify-center">
     <div id="konvaContainer"></div>
 </div>
 
 <div id="zoom-controls" class="fixed bottom-6 right-6 z-1000 flex gap-2">
     <button
         id="zoom-out-btn"
-        class="text-xs p-3.5 rounded-full bg-[#222] text-white border-none shadow-[0_2px_8px_rgba(0,0,0,0.13)] cursor-pointer hover:bg-[#333]"
+        class="h-8 w-8 text-lg rounded-full bg-neutral-400 text-white border-none shadow-md cursor-pointer"
     >
         -
     </button>
     <button
         id="zoom-in-btn"
-        class="text-xs p-3.5 rounded-full bg-[#222] text-white border-none shadow-[0_2px_8px_rgba(0,0,0,0.13)] cursor-pointer hover:bg-[#333]"
+        class="h-8 w-8 text-lg rounded-full bg-neutral-400 text-white border-none shadow-md cursor-pointer"
     >
         +
     </button>
 </div>
+
+<script>
+    /* For slider type inputs, update the seeker position */
+    (() => {
+        const sliders = document.querySelectorAll('input[type="range"].input');
+        if (!sliders) return;
+
+        const updateSlider = (el) => {
+            const min = parseFloat(el.min || 0);
+            const max = parseFloat(el.max || 100);
+            const value = parseFloat(el.value);
+            const percent = (max === min) ? 0 : ((value - min) / (max - min)) * 100;
+            el.style.setProperty('--slider-value', `${percent}%`);
+        };
+
+        sliders.forEach(slider => {
+            updateSlider(slider);
+            slider.addEventListener('input', (event) => updateSlider(event.target));
+        });
+    })();
+</script>
