@@ -468,6 +468,13 @@ function convertImageToVariable() {
 }
 
 input_imageName.addEventListener("input", (e) => {
-  const imageName = e.target.value;
+  let imageName = e.target.value.trim();
+
+  // is a variable, but does not start with `.`
+  if (!imageName.match(/\{\{\\s*\.(.*)\s*}\}/g)) {
+    imageName = imageName.replace(/\{\{\s*(.*?)\s*\}\}/g, "{{ .$1 }}");
+    e.target.value = imageName;
+  }
+
   embedVariablesToImage(selectedNode, { path: imageName });
 });

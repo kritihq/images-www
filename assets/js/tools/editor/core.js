@@ -57,6 +57,19 @@ function embedVariablesToImage(node, { path }) {
   }
 }
 
+function unembedVariablesFromImage(node) {
+  if (!node || node.getClassName() != "Image") {
+    return;
+  }
+
+  const defaults = node.getAttr("defaults") || {};
+  if (defaults.path) {
+    node.setAttrs({ path: defaults.path });
+    delete defaults.path;
+    node.setAttrs({ defaults });
+  }
+}
+
 function addText(layer, text, fontFamily, fontSize) {
   const konvaText = new Konva.Text({
     text: text,

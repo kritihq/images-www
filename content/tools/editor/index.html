@@ -368,11 +368,19 @@ title: Image Editor
             <section id="div_metaImage" class="hidden">
                 <h2 class="text-xl text-blue-600">Image</h2>
                 <div class="grid gap-3 mt-6">
-                    <label for="input_imageName" class="label">Label</label>
-                    <div class="relative">
+                    <label for="input_imageName" class="label">Path</label>
+                    <div class="relative [&[variable]+p]:block">
                         <input type="text" class="input pr-9" placeholder="image name" id="input_imageName" disabled>
                         <button
-                            onclick="convertImageToVariable()"
+                            onclick="
+                              event.target.parentElement.toggleAttribute('variable');
+                              input_imageName.disabled = !input_imageName.disabled;
+                              input_imageName.placeholder = '{{ .variable_name }}';
+                              if (input_imageName.disabled) unembedVariablesFromImage(selectedNode);
+                              input_imageName.value = !input_imageName.disabled ? '' : selectedNode.getAttr('path');
+                              // embedVariablesToImage(selectedNode, { path: input_imageName.value });
+                              // convertImageToVariable();
+                            "
                             class="group absolute right-1.5 top-1/2 -translate-y-1/2 btn-icon-ghost text-muted-foreground hover:text-accent-foreground size-6"
                             id="btn_imageToVar"
                             title="link to a variable"
@@ -380,7 +388,9 @@ title: Image Editor
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link2-icon lucide-link-2"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" x2="16" y1="12" y2="12"/></svg>
                         </button>
                     </div>
-                    <p class="text-muted-foreground text-sm">Add variable using braces e.g. {{ var_name }}.</p>
+
+                    <!-- TODO: show default image path here, currently its blank -->
+                    <p id="text_imageNameDefault" class="text-muted-foreground text-sm hidden"></p>
                 </div>
 
                 <hr class="h-px bg-neutral-600 my-6 border-none" />
@@ -392,7 +402,7 @@ title: Image Editor
                 <div class="grid gap-3 mt-6">
                     <label for="input_adjustText" class="label">Text</label>
                     <textarea class="textarea" id="input_adjustText" placeholder="Type your message here"></textarea>
-                    <p class="text-muted-foreground text-sm">Edit text here, use braces for variables e.g. {{ var_name }}.</p>
+                    <p class="text-muted-foreground text-sm">Edit text here, use braces for variables e.g. {{ .var_name }}.</p>
                 </div>
 
                 <div class="grid gap-3 mt-6">
