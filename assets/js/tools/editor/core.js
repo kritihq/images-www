@@ -53,7 +53,7 @@ function embedVariablesToImage(node, { path }) {
       node.setAttrs({ defaults });
     }
 
-    node.setAttrs({ path: path.replace(/\{\{\s*(.*?)\s*\}\}/g, "{{ .$1 }}") });
+    node.setAttrs({ path: path });
   }
 }
 
@@ -96,7 +96,11 @@ function updateText(selectedNode, text, fontFamily, fontSize) {
   if (!selectedNode.getClassName() === "Text") return;
 
   if (text) {
-    selectedNode.text(text.replace(/\{\{\s*(.*?)\s*\}\}/g, "{{ .$1 }}"));
+    if (!text.match(/\{\{\\s*\.(\w*)\s*}\}/g)) {
+      // is a variable, but does not start with `.`
+      text = text.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
+    }
+    selectedNode.text(text);
   }
   selectedNode.fontFamily(fontFamily);
   selectedNode.fontSize(fontSize);

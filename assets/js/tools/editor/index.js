@@ -157,6 +157,8 @@ function setImageMetadata({ name }) {
     // image name is variable
     text_imageNameDefault.textContent = name.default || "";
     input_imageName.disabled = false;
+  } else {
+    input_imageName.disabled = true;
   }
 }
 
@@ -172,6 +174,32 @@ function getImageMetadata(node) {
 
   return data;
 }
+
+function convertImageToVariable() {
+  if (!selectedNode || selectedNode.getClassName() != "Image") {
+    return;
+  }
+
+  input_imageName.disabled = false;
+  input_imageName.value = "";
+  input_imageName.placeholder = "Enter variable id";
+}
+
+input_imageName.addEventListener("input", (e) => {
+  let imageName = e.target.value.trim();
+
+  if (!imageName.match(/\{\{.*\}\}/g)) {
+    return; // continue only if variable format is correct
+  }
+
+  if (!imageName.match(/\{\{\\s*\.(\w*)\s*}\}/g)) {
+    // is a variable, but does not start with `.`
+    imageName = imageName.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
+    e.target.value = imageName;
+  }
+
+  embedVariablesToImage(selectedNode, { path: imageName });
+});
 
 // Quick Filters
 const filterButtons = document.querySelectorAll(".filter-btn");
@@ -455,26 +483,3 @@ function exportToJSON() {
   const jsonStr = exportToJSONWithVariablePlaceholders(stage);
   return JSON.stringify(JSON.parse(jsonStr), null, 4);
 }
-
-// Variables
-function convertImageToVariable() {
-  if (!selectedNode || selectedNode.getClassName() != "Image") {
-    return;
-  }
-
-  input_imageName.disabled = false;
-  input_imageName.value = "";
-  input_imageName.placeholder = "Enter variable id";
-}
-
-input_imageName.addEventListener("input", (e) => {
-  let imageName = e.target.value.trim();
-
-  // is a variable, but does not start with `.`
-  if (!imageName.match(/\{\{\\s*\.(.*)\s*}\}/g)) {
-    imageName = imageName.replace(/\{\{\s*(.*?)\s*\}\}/g, "{{ .$1 }}");
-    e.target.value = imageName;
-  }
-
-  embedVariablesToImage(selectedNode, { path: imageName });
-});

@@ -373,13 +373,15 @@ title: Image Editor
                         <input type="text" class="input pr-9" placeholder="image name" id="input_imageName" disabled>
                         <button
                             onclick="
-                              event.target.parentElement.toggleAttribute('variable');
-                              input_imageName.disabled = !input_imageName.disabled;
-                              input_imageName.placeholder = '{{ .variable_name }}';
-                              if (input_imageName.disabled) unembedVariablesFromImage(selectedNode);
-                              input_imageName.value = !input_imageName.disabled ? '' : selectedNode.getAttr('path');
-                              // embedVariablesToImage(selectedNode, { path: input_imageName.value });
-                              // convertImageToVariable();
+                                event.target.parentElement.toggleAttribute('variable');
+                                input_imageName.disabled = !input_imageName.disabled;
+                                input_imageName.placeholder = '{{ .variable_name }}';
+                                if (input_imageName.disabled) {
+                                  unembedVariablesFromImage(selectedNode);
+                                } else {
+                                  text_imageNameDefault.textContent = 'default: ' + selectedNode.getAttr('path');
+                                }
+                                input_imageName.value = !input_imageName.disabled ? '' : selectedNode.getAttr('path');
                             "
                             class="group absolute right-1.5 top-1/2 -translate-y-1/2 btn-icon-ghost text-muted-foreground hover:text-accent-foreground size-6"
                             id="btn_imageToVar"
@@ -389,7 +391,6 @@ title: Image Editor
                         </button>
                     </div>
 
-                    <!-- TODO: show default image path here, currently its blank -->
                     <p id="text_imageNameDefault" class="text-muted-foreground text-sm hidden"></p>
                 </div>
 

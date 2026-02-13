@@ -755,10 +755,6 @@
   .rounded-xl {
     border-radius: var(--radius-xl);
   }
-  .rounded-l-md {
-    border-top-left-radius: var(--radius-md);
-    border-bottom-left-radius: var(--radius-md);
-  }
   .rounded-b-md {
     border-bottom-right-radius: var(--radius-md);
     border-bottom-left-radius: var(--radius-md);
@@ -782,10 +778,6 @@
   .border-t {
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
-  }
-  .border-r-0 {
-    border-right-style: var(--tw-border-style);
-    border-right-width: 0px;
   }
   .border-r-2 {
     border-right-style: var(--tw-border-style);
@@ -1895,23 +1887,8 @@
       }
     }
   }
-  .\[\&_\[variable\]\+p\]\:block {
-    & [variable]+p {
-      display: block;
-    }
-  }
   .\[\&\.active\]\:block {
     &.active {
-      display: block;
-    }
-  }
-  .\[\[variable\]\+p\]\:block {
-    &:is([variable]+p) {
-      display: block;
-    }
-  }
-  .\[\&\:variable\+p\]\:block {
-    &:variable+p {
       display: block;
     }
   }
