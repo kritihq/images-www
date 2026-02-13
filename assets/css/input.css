@@ -1,2 +1,10 @@
 @import "tailwindcss";
 @import "./theme.css";
+
+#sidebar[data-view="text"] .for-image {
+    display: none;
+}
+
+#sidebar[data-view="image"] .for-text {
+    display: none;
+}

@@ -116,17 +116,19 @@ function selectNode(node) {
     // const { rotation } = getTransformation(selectedNode);
     // setUIValRotation(rotation);
     // div_adjustFilters.style.display = "block";
-    div_adjustAdjust.style.display = "block";
-    div_metaImage.style.display = "block";
-    div_metaText.style.display = "none";
+    // div_adjustAdjust.style.display = "block";
+    // div_metaImage.style.display = "block";
+    // div_metaText.style.display = "none";
+    sidebar.setAttribute("data-view", "image");
   } else if (node.getClassName() === "Text") {
     setUIValFontFamily(node.fontFamily());
     setUIValFontSize(node.fontSize());
     setUIValAdjustText(node.text());
     // div_adjustFilters.style.display = "none";
-    div_metaImage.style.display = "none";
-    div_adjustAdjust.style.display = "block";
-    div_metaText.style.display = "block";
+    // div_metaImage.style.display = "none";
+    // div_adjustAdjust.style.display = "block";
+    // div_metaText.style.display = "block";
+    sidebar.setAttribute("data-view", "text");
   }
 
   showMenuSidebar("adjust-image-panel");
