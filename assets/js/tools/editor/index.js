@@ -203,6 +203,14 @@ input_imageName.addEventListener("input", (e) => {
   embedVariablesToImage(selectedNode, { path: imageName });
 });
 
+input_textColor.addEventListener("change", (e) => {
+  if (!selectedNode || !selectedNode.getClassName() === "Text") {
+    return;
+  }
+
+  selectedNode.fill(e.target.value);
+});
+
 // Quick Filters
 const filterButtons = document.querySelectorAll(".filter-btn");
 let currentFilter = "none";
