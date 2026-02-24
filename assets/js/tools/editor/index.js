@@ -124,6 +124,7 @@ function selectNode(node) {
     setUIValFontFamily(node.fontFamily());
     setUIValFontSize(node.fontSize());
     setUIValAdjustText(node.text());
+    setUIValColor(node.fill() || "#ffffff");
     // div_adjustFilters.style.display = "none";
     // div_metaImage.style.display = "none";
     // div_adjustAdjust.style.display = "block";
@@ -359,7 +360,12 @@ document.getElementById("select_fontFamily").addEventListener("change", (e) => {
 });
 
 function setUIValFontFamily(val) {
-  document.getElementById("select_fontFamily").value = val;
+  select_fontFamily.value = val;
+}
+
+// Text color
+function setUIValColor(val) {
+  input_textColor.value = val;
 }
 
 // Custom Context Menu Logic
