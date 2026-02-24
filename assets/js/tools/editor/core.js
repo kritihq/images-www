@@ -1,4 +1,5 @@
 const scaleBy = 1.5;
+const variableRegex = /\{\{\s*\.(\w*)\s*}\}/g;
 
 function init() {
   const stage = new Konva.Stage({
@@ -96,7 +97,7 @@ function updateText(selectedNode, text, fontFamily, fontSize) {
   if (!selectedNode.getClassName() === "Text") return;
 
   if (text) {
-    if (!text.match(/\{\{\\s*\.(\w*)\s*}\}/g)) {
+    if (!text.match(variableRegex)) {
       // is a variable, but does not start with `.`
       text = text.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
     }
@@ -297,4 +298,27 @@ function exportToJSONWithVariablePlaceholders(stage) {
   const baseJson = stage.toJSON();
 
   return baseJson;
+}
+
+function getAllVariables(stage) {
+  let variables = [];
+
+  const traverseNodes = function (node) {
+    Object.keys(node.getAttrs()).forEach((k) => {
+      const v = node.getAttr(k);
+      let match;
+      if (typeof v === "string" && (match = v.match(variableRegex)) != null) {
+        variables.push(...match);
+      }
+    });
+
+    if (!node.hasChildren()) return;
+
+    node.getChildren().forEach((child) => {
+      traverseNodes(child);
+    });
+  };
+
+  traverseNodes(stage);
+  return variables;
 }

@@ -195,7 +195,7 @@ input_imageName.addEventListener("input", (e) => {
     return; // continue only if variable format is correct
   }
 
-  if (!imageName.match(/\{\{\\s*\.(\w*)\s*}\}/g)) {
+  if (!imageName.match(variableRegex)) {
     // is a variable, but does not start with `.`
     imageName = imageName.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
     e.target.value = imageName;
