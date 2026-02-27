@@ -1,6 +1,8 @@
 const scaleBy = 1.5;
 const variableRegex = /\{\{\s*\.(\w*)\s*}\}/g;
 
+const goRegex = /({{\s*vars\.([\w.-]+)\s*(?:\|\s*default\s*"([^"]*)"\s*)?}})/g;
+
 function init() {
   const stage = new Konva.Stage({
     container: "konvaContainer",
@@ -97,10 +99,10 @@ function updateText(selectedNode, text, fontFamily, fontSize) {
   if (!selectedNode.getClassName() === "Text") return;
 
   if (text) {
-    if (!text.match(variableRegex)) {
-      // is a variable, but does not start with `.`
-      text = text.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
-    }
+    // if (!text.match(variableRegex)) {
+    //   // is a variable, but does not start with `.`
+    //   text = text.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
+    // }
     selectedNode.text(text);
   }
   selectedNode.fontFamily(fontFamily);

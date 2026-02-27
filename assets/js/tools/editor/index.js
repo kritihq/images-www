@@ -1,4 +1,5 @@
 let selectedNode = null;
+const userRegex = /({{\s*([^|}]*?)\s*(?:\|\s*([^}]*?)\s*)?}})/g;
 
 // Store uploaded images as { id, src, name }
 let uploadedImages = [];
@@ -111,8 +112,8 @@ function selectNode(node) {
 
   if (node.getClassName() === "Image") {
     setImageMetadata(getImageMetadata(selectedNode));
-    const { type, filters } = getFilters(selectedNode);
-    setFilterUIVals(type, filters);
+    // const { type, filters } = getFilters(selectedNode);
+    // setFilterUIVals(type, filters);
     // const { rotation } = getTransformation(selectedNode);
     // setUIValRotation(rotation);
     // div_adjustFilters.style.display = "block";
@@ -123,7 +124,7 @@ function selectNode(node) {
   } else if (node.getClassName() === "Text") {
     setUIValFontFamily(node.fontFamily());
     setUIValFontSize(node.fontSize());
-    setUIValAdjustText(node.text());
+    setUIValAdjustText(convertToVariableSyntax(node.text()));
     setUIValColor(node.fill() || "#ffffff");
     // div_adjustFilters.style.display = "none";
     // div_metaImage.style.display = "none";
@@ -191,17 +192,19 @@ function convertImageToVariable() {
 input_imageName.addEventListener("input", (e) => {
   let imageName = e.target.value.trim();
 
-  if (!imageName.match(/\{\{.*\}\}/g)) {
-    return; // continue only if variable format is correct
-  }
+  // if (!imageName.match(/\{\{.*\}\}/g)) {
+  //   return; // continue only if variable format is correct
+  // }
 
-  if (!imageName.match(variableRegex)) {
-    // is a variable, but does not start with `.`
-    imageName = imageName.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
-    e.target.value = imageName;
-  }
+  // if (!imageName.match(variableRegex)) {
+  //   // is a variable, but does not start with `.`
+  //   imageName = imageName.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
+  //   e.target.value = imageName;
+  // }
 
-  embedVariablesToImage(selectedNode, { path: imageName });
+  embedVariablesToImage(selectedNode, {
+    path: convertToTemplateSyntax(imageName),
+  });
 });
 
 input_textColor.addEventListener("change", (e) => {
@@ -497,5 +500,60 @@ document.getElementById("downloadBtn").addEventListener("click", () => {
 // Export stage
 function exportToJSON() {
   const jsonStr = exportToJSONWithVariablePlaceholders(stage);
-  return JSON.stringify(JSON.parse(jsonStr), null, 4);
+  return convertToTemplateSyntax(JSON.stringify(JSON.parse(jsonStr), null, 4));
+}
+
+// variable utils
+/**
+ * Extracts all the variables from provided text.
+ * E.g. Hello {{ name1 | "John Doe" }}, I am {{ name2 }}
+ * will return [{var: name1, default: John Doe}, {var: name2}]
+ *
+ * default value is optional, if not present, null will be returned.
+ *
+ * @param {string} text
+ * @returns {Array<{var: string, default: string}>}
+ */
+function extractValuesFromText(text) {
+  const matches = text.match(userRegex);
+  if (!matches) return [];
+
+  return matches.map((match) => {
+    const [_, varName, defaultValue] = match.match(userRegex);
+    return { var: varName, default: defaultValue };
+  });
+}
+
+/**
+ * Converts user-friendly shorthand to Go template syntax.
+ * @param {string} text - The raw input string (e.g., "Hello {{ name | John }}").
+ * @returns {string} The formatted Go template string (e.g., "Hello {{ vars.name | default "John" }}").
+ */
+function convertToTemplateSyntax(text) {
+  return text.replace(
+    userRegex,
+    (match, complete, varName, defaultValue, offset) => {
+      const trimmedVar = varName.trim();
+      // Only add the default part if a value actually exists
+      const trimmedDefault = defaultValue ? defaultValue.trim() : null;
+
+      return trimmedDefault
+        ? `{{ vars.${trimmedVar} | default "${trimmedDefault}" }}`
+        : `{{ vars.${trimmedVar} }}`;
+    },
+  );
+}
+
+/**
+ * Reverts Go template syntax back to user-friendly shorthand.
+ * @param {string} text - The Go template string (e.g., "{{ vars.name | default "John" }}").
+ * @returns {string} The simplified user-facing string (e.g., "{{ name | John }}").
+ */
+function convertToVariableSyntax(text) {
+  return text.replace(goRegex, (match, complete, varName, defaultValue) => {
+    // If defaultValue exists, it was captured from inside the quotes
+    return defaultValue
+      ? `{{ ${varName} | ${defaultValue} }}`
+      : `{{ ${varName} }}`;
+  });
 }
