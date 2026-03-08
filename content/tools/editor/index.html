@@ -213,7 +213,7 @@ title: Image Editor
     >
         <button
             class="sticky left-full cursor-pointer"
-            onclick='this.parentElement.style.display="none";'
+            onclick='hideMenuSidebar()'
         >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -381,7 +381,7 @@ title: Image Editor
                                 if (input_imageName.disabled) {
                                   unembedVariablesFromImage(selectedNode);
                                 } else {
-                                  text_imageNameDefault.textContent = 'default: ' + selectedNode.getAttr('path');
+                                  text_imageNameDefault.textContent = selectedNode.getAttr('path');
                                 }
                                 input_imageName.value = !input_imageName.disabled ? '' : selectedNode.getAttr('path');
                             "
@@ -392,7 +392,7 @@ title: Image Editor
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-link2-icon lucide-link-2"><path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 1 1 0 10h-2"/><line x1="8" x2="16" y1="12" y2="12"/></svg>
                         </button>
                     </div>
-                    <p id="text_imageNameDefault" class="text-muted-foreground text-sm hidden"></p>
+                    <p class="text-muted-foreground text-sm hidden"><span>default: </span><span id="text_imageNameDefault"></span></p>
                 </div>
 
                 <hr class="h-px bg-neutral-600 my-6 border-none" />

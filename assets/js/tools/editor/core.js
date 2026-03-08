@@ -48,14 +48,7 @@ function embedVariablesToImage(node, { path }) {
     return;
   }
 
-  const defaults = node.getAttr("defaults") || {};
   if (path) {
-    if (!defaults.path) {
-      // first time converting path to variable
-      defaults.path = node.getAttr("path");
-      node.setAttrs({ defaults });
-    }
-
     node.setAttrs({ path: path });
   }
 }
@@ -65,11 +58,9 @@ function unembedVariablesFromImage(node) {
     return;
   }
 
-  const defaults = node.getAttr("defaults") || {};
-  if (defaults.path) {
-    node.setAttrs({ path: defaults.path });
-    delete defaults.path;
-    node.setAttrs({ defaults });
+  const vars = extractValuesFromText(node.getAttr("path"));
+  if (vars && vars.length > 0) {
+    node.setAttrs({ path: vars[0].default });
   }
 }
 
@@ -323,4 +314,59 @@ function getAllVariables(stage) {
 
   traverseNodes(stage);
   return variables;
+}
+
+// variable utils
+/**
+ * Extracts all the variables from provided text.
+ * E.g. Hello {{ name1 | John Doe }}, I am {{ name2 }}
+ * will return [{var: name1, default: John Doe}, {var: name2}]
+ *
+ * default value is optional, if not present, null will be returned.
+ *
+ * @param {string} text
+ * @returns {Array<{var: string, default: string}>}
+ */
+function extractValuesFromText(text) {
+  const matches = text.match(userRegex);
+  if (!matches) return [];
+
+  return matches.map((match) => {
+    const x = [...match.matchAll(userRegex)];
+    return { var: x[0][2], default: x[0][3] };
+  });
+}
+
+/**
+ * Converts user-friendly shorthand to Go template syntax.
+ * @param {string} text - The raw input string (e.g., "Hello {{ name | John }}").
+ * @returns {string} The formatted Go template string (e.g., "Hello {{ vars.name | default "John" }}").
+ */
+function convertToTemplateSyntax(text) {
+  return text.replace(
+    userRegex,
+    (match, complete, varName, defaultValue, offset) => {
+      const trimmedVar = varName.trim();
+      // Only add the default part if a value actually exists
+      const trimmedDefault = defaultValue ? defaultValue.trim() : null;
+
+      return trimmedDefault
+        ? `{{ vars.${trimmedVar} | default "${trimmedDefault}" }}`
+        : `{{ vars.${trimmedVar} }}`;
+    },
+  );
+}
+
+/**
+ * Reverts Go template syntax back to user-friendly shorthand.
+ * @param {string} text - The Go template string (e.g., "{{ vars.name | default "John" }}").
+ * @returns {string} The simplified user-facing string (e.g., "{{ name | John }}").
+ */
+function convertToVariableSyntax(text) {
+  return text.replace(goRegex, (match, complete, varName, defaultValue) => {
+    // If defaultValue exists, it was captured from inside the quotes
+    return defaultValue
+      ? `{{ ${varName} | ${defaultValue} }}`
+      : `{{ ${varName} }}`;
+  });
 }

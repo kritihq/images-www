@@ -14,6 +14,27 @@
             src="https://cdn.jsdelivr.net/npm/basecoat-css@0.3.10/dist/js/all.min.js"
             defer
         ></script>
+
+        <script src="https://unpkg.com/konva@10/konva.min.js"></script>
+
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+
+        <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+        {{- with resources.Get "js/tools/editor/core.js" }}
+        {{- if hugo.IsDevelopment }}
+        <script src="{{ .RelPermalink }}"></script>
+        {{- else }}
+        {{- with . | minify | fingerprint }}
+        <script
+            src="{{ .RelPermalink }}"
+            integrity="{{ .Data.Integrity }}"
+            crossorigin="anonymous"
+        ></script>
+        {{- end }}
+        {{- end }}
+        {{- end }}
     </head>
     <body
         class="min-h-screen bg-zinc-200 grid grid-rows-[min-content_1fr_auto] auto-cols-fr"

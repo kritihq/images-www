@@ -155,11 +155,11 @@ stage.on("click", (e) => {
 });
 
 // Meta data
-function setImageMetadata({ name }) {
-  input_imageName.value = name.value || name.default;
-  if (name.default) {
+function setImageMetadata({ path }) {
+  input_imageName.value = path.value || path.default;
+  if (path.default) {
     // image name is variable
-    text_imageNameDefault.textContent = name.default || "";
+    text_imageNameDefault.textContent = path.default || "";
     input_imageName.disabled = false;
   } else {
     input_imageName.disabled = true;
@@ -171,10 +171,17 @@ function getImageMetadata(node) {
     return;
   }
   const data = {};
-  data.name = {
-    default: node.getAttr("defaults")?.path || "",
-    value: node.getAttr("path") || "",
-  };
+
+  const vars = extractValuesFromText(node.getAttr("path"));
+  console.log(vars);
+  if (vars && vars.length > 0) {
+    data.path = {
+      default: vars[0].default,
+      value: vars[0].var,
+    };
+  } else {
+    data.path = { value: node.getAttr("path") };
+  }
 
   return data;
 }
@@ -191,19 +198,8 @@ function convertImageToVariable() {
 
 input_imageName.addEventListener("input", (e) => {
   let imageName = e.target.value.trim();
-
-  // if (!imageName.match(/\{\{.*\}\}/g)) {
-  //   return; // continue only if variable format is correct
-  // }
-
-  // if (!imageName.match(variableRegex)) {
-  //   // is a variable, but does not start with `.`
-  //   imageName = imageName.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
-  //   e.target.value = imageName;
-  // }
-
   embedVariablesToImage(selectedNode, {
-    path: convertToTemplateSyntax(imageName),
+    path: `{{ ${imageName} | ${text_imageNameDefault.textContent} }}`,
   });
 });
 
@@ -302,19 +298,6 @@ function setUIValBlur(val) {
   document.getElementById("blurVal").textContent = val;
   document.getElementById("blur").value = val;
 }
-
-// TODO: Konva has internal rotation mechanics
-// Rotate
-// document.getElementById("rotation").addEventListener("input", (e) => {
-//   document.getElementById("rotationVal").textContent = e.target.value;
-// });
-// document.getElementById("rotation").addEventListener("change", (e) => {
-//   rotate(selectedNode, e.target.value);
-// });
-// function setUIValRotation(val) {
-//   document.getElementById("rotationVal").textContent = val;
-//   document.getElementById("rotation").value = val;
-// }
 
 // Border Radius
 document.getElementById("borderRadius").addEventListener("input", (e) => {
@@ -503,57 +486,18 @@ function exportToJSON() {
   return convertToTemplateSyntax(JSON.stringify(JSON.parse(jsonStr), null, 4));
 }
 
-// variable utils
-/**
- * Extracts all the variables from provided text.
- * E.g. Hello {{ name1 | "John Doe" }}, I am {{ name2 }}
- * will return [{var: name1, default: John Doe}, {var: name2}]
- *
- * default value is optional, if not present, null will be returned.
- *
- * @param {string} text
- * @returns {Array<{var: string, default: string}>}
- */
-function extractValuesFromText(text) {
-  const matches = text.match(userRegex);
-  if (!matches) return [];
+// delete node
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Delete" || event.key === "Backspace") {
+    const selectedNodes = transformer.nodes();
+    if (selectedNodes.length > 0) {
+      selectedNodes.forEach((node) => {
+        node.remove();
+      });
+      transformer.nodes([]);
+      layer.draw();
 
-  return matches.map((match) => {
-    const [_, varName, defaultValue] = match.match(userRegex);
-    return { var: varName, default: defaultValue };
-  });
-}
-
-/**
- * Converts user-friendly shorthand to Go template syntax.
- * @param {string} text - The raw input string (e.g., "Hello {{ name | John }}").
- * @returns {string} The formatted Go template string (e.g., "Hello {{ vars.name | default "John" }}").
- */
-function convertToTemplateSyntax(text) {
-  return text.replace(
-    userRegex,
-    (match, complete, varName, defaultValue, offset) => {
-      const trimmedVar = varName.trim();
-      // Only add the default part if a value actually exists
-      const trimmedDefault = defaultValue ? defaultValue.trim() : null;
-
-      return trimmedDefault
-        ? `{{ vars.${trimmedVar} | default "${trimmedDefault}" }}`
-        : `{{ vars.${trimmedVar} }}`;
-    },
-  );
-}
-
-/**
- * Reverts Go template syntax back to user-friendly shorthand.
- * @param {string} text - The Go template string (e.g., "{{ vars.name | default "John" }}").
- * @returns {string} The simplified user-facing string (e.g., "{{ name | John }}").
- */
-function convertToVariableSyntax(text) {
-  return text.replace(goRegex, (match, complete, varName, defaultValue) => {
-    // If defaultValue exists, it was captured from inside the quotes
-    return defaultValue
-      ? `{{ ${varName} | ${defaultValue} }}`
-      : `{{ ${varName} }}`;
-  });
-}
+      hideMenuSidebar();
+    }
+  }
+});

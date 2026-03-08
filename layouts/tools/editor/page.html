@@ -1,21 +1,4 @@
 {{ define "main" }}
-
-<script src="https://unpkg.com/konva@10/konva.min.js"></script>
-
-{{- with resources.Get "js/tools/editor/core.js" }}
-{{- if hugo.IsDevelopment }}
-<script src="{{ .RelPermalink }}"></script>
-{{- else }}
-{{- with . | minify | fingerprint }}
-<script
-    src="{{ .RelPermalink }}"
-    integrity="{{ .Data.Integrity }}"
-    crossorigin="anonymous"
-></script>
-{{- end }}
-{{- end }}
-{{- end }}
-
 <main class="w-screen h-screen flex">{{ .Content }}</main>
 
 {{- with resources.Get "js/tools/editor/index.js" }}
@@ -31,4 +14,5 @@
 {{- end }}
 {{- end }}
 {{- end }}
+
 {{ end }}
