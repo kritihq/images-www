@@ -60,7 +60,7 @@ function unembedVariablesFromImage(node) {
 
   const vars = extractValuesFromText(node.getAttr("path"));
   if (vars && vars.length > 0) {
-    node.setAttrs({ path: vars[0].default });
+    node.setAttrs({ path: vars[0].default_value });
   }
 }
 
@@ -90,11 +90,11 @@ function updateText(selectedNode, text, fontFamily, fontSize) {
   if (!selectedNode.getClassName() === "Text") return;
 
   if (text) {
-    // if (!text.match(variableRegex)) {
-    //   // is a variable, but does not start with `.`
-    //   text = text.replace(/\{\{\s*(\w*?)\s*\}\}/g, "{{ .$1 }}");
-    // }
-    selectedNode.text(text);
+    const variables = selectedNode.getAttr("variables") || {};
+    variables["text"] = text;
+    selectedNode.setAttrs({ variables });
+
+    selectedNode.text(resolveVariables(text));
   }
   selectedNode.fontFamily(fontFamily);
   selectedNode.fontSize(fontSize);
@@ -288,32 +288,27 @@ function applyBorderRadiusToSelected(selectedNode, percent) {
 }
 
 function exportToJSONWithVariablePlaceholders(stage) {
-  const baseJson = stage.toJSON();
-
-  return baseJson;
-}
-
-function getAllVariables(stage) {
-  let variables = [];
-
-  const traverseNodes = function (node) {
-    Object.keys(node.getAttrs()).forEach((k) => {
-      const v = node.getAttr(k);
-      let match;
-      if (typeof v === "string" && (match = v.match(variableRegex)) != null) {
-        variables.push(...match);
+  // Helper to recursively process nodes
+  function processNode(nodeJson) {
+    // If variables exist, replace attributes with placeholders
+    if (nodeJson.attrs && nodeJson.attrs.variables) {
+      const variables = nodeJson.attrs.variables;
+      for (const attr in variables) {
+        nodeJson.attrs[attr] = variables[attr];
       }
-    });
+      // Optionally, remove the variables object from export
+      delete nodeJson.attrs.variables;
+    }
 
-    if (!node.hasChildren()) return;
+    // Recursively process children
+    if (nodeJson.children && nodeJson.children.length > 0) {
+      nodeJson.children = nodeJson.children.map(processNode);
+    }
+    return nodeJson;
+  }
 
-    node.getChildren().forEach((child) => {
-      traverseNodes(child);
-    });
-  };
-
-  traverseNodes(stage);
-  return variables;
+  const stageObj = JSON.parse(stage.toJSON());
+  return processNode(stageObj);
 }
 
 // variable utils
@@ -333,7 +328,7 @@ function extractValuesFromText(text) {
 
   return matches.map((match) => {
     const x = [...match.matchAll(userRegex)];
-    return { var: x[0][2], default: x[0][3] };
+    return { variable_name: x[0][2], default_value: x[0][3] };
   });
 }
 
@@ -368,5 +363,37 @@ function convertToVariableSyntax(text) {
     return defaultValue
       ? `{{ ${varName} | ${defaultValue} }}`
       : `{{ ${varName} }}`;
+  });
+}
+
+/**
+ * Resolves custom variable tags by checking a data object first,
+ * then falling back to the provided default value, or finally
+ * leaving the tag intact.
+ *
+ * @param {string} text - The input string (e.g., "Hello {{ name | Guest }}")
+ * @param {Object} dataSource - The object containing real values (e.g., { name: "Alice" })
+ * @returns {string} The final string with values injected.
+ */
+function resolveVariables(text, dataSource = {}) {
+  // Group 1: Full Tag, Group 2: Var Name, Group 3: Default Value
+  const userRegex = /({{\s*([^|}]*?)\s*(?:\|\s*([^}]*?)\s*)?}})/g;
+
+  return text.replace(userRegex, (match, fullTag, varName, defaultValue) => {
+    const key = varName.trim();
+    const fallback = defaultValue ? defaultValue.trim() : null;
+
+    // 1. Check if the key exists in our data (handling 0 or false as valid values)
+    if (Object.prototype.hasOwnProperty.call(dataSource, key)) {
+      return dataSource[key];
+    }
+
+    // 2. Check if we have a default value in the tag
+    if (fallback !== null && fallback.length > 0) {
+      return fallback;
+    }
+
+    // 3. Keep the original tag if nothing else works
+    return fullTag;
   });
 }

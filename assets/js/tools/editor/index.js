@@ -12,16 +12,6 @@ const menuItems = document.querySelectorAll(".menu-item");
 const detailPanels = document.querySelectorAll(".detail-panel");
 const sidebarLeftExtension = document.querySelector("#sidebarLeftExtension");
 
-function showMenuSidebar(panelId) {
-  sidebarLeftExtension.style.display = "block";
-
-  // Hide all panels
-  detailPanels.forEach((panel) => panel.classList.remove("active"));
-
-  // Show corresponding panel
-  document.getElementById(panelId).classList.add("active");
-}
-
 function hideMenuSidebar() {
   sidebarLeftExtension.style.display = "none";
 
@@ -39,6 +29,20 @@ menuItems.forEach((item) => {
     showMenuSidebar(item.getAttribute("data-panel") + "-panel");
   });
 });
+
+function showMenuSidebar(panelId) {
+  sidebarLeftExtension.style.display = "block";
+
+  // Hide all panels
+  detailPanels.forEach((panel) => panel.classList.remove("active"));
+
+  // Show corresponding panel
+  document.getElementById(panelId).classList.add("active");
+
+  if (panelId === "preview-panel") {
+    populatePreviewPanelList();
+  }
+}
 
 document.getElementById("imageUpload").addEventListener("change", (e) => {
   const file = e.target.files[0];
@@ -124,7 +128,13 @@ function selectNode(node) {
   } else if (node.getClassName() === "Text") {
     setUIValFontFamily(node.fontFamily());
     setUIValFontSize(node.fontSize());
-    setUIValAdjustText(convertToVariableSyntax(node.text()));
+    setUIValAdjustText(
+      convertToVariableSyntax(
+        node.getAttr("variables")
+          ? node.getAttr("variables").text || node.text()
+          : node.text(),
+      ),
+    );
     setUIValColor(node.fill() || "#ffffff");
     // div_adjustFilters.style.display = "none";
     // div_metaImage.style.display = "none";
@@ -176,24 +186,14 @@ function getImageMetadata(node) {
   console.log(vars);
   if (vars && vars.length > 0) {
     data.path = {
-      default: vars[0].default,
-      value: vars[0].var,
+      default: vars[0].default_value,
+      value: vars[0].variable_name,
     };
   } else {
     data.path = { value: node.getAttr("path") };
   }
 
   return data;
-}
-
-function convertImageToVariable() {
-  if (!selectedNode || selectedNode.getClassName() != "Image") {
-    return;
-  }
-
-  input_imageName.disabled = false;
-  input_imageName.value = "";
-  input_imageName.placeholder = "Enter variable id";
 }
 
 input_imageName.addEventListener("input", (e) => {
@@ -389,6 +389,10 @@ contextMenu.addEventListener("click", (e) => {
     case "moveToTop":
       selectedNode.moveToTop();
       break;
+
+    case "deleteNode":
+      deleteNode(selectedNode);
+      break;
   }
   layer.draw();
   contextMenu.style.visibility = "hidden";
@@ -483,21 +487,43 @@ document.getElementById("downloadBtn").addEventListener("click", () => {
 // Export stage
 function exportToJSON() {
   const jsonStr = exportToJSONWithVariablePlaceholders(stage);
-  return convertToTemplateSyntax(JSON.stringify(JSON.parse(jsonStr), null, 4));
+  return convertToTemplateSyntax(JSON.stringify(jsonStr, null, 4));
 }
 
 // delete node
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Delete" || event.key === "Backspace") {
-    const selectedNodes = transformer.nodes();
-    if (selectedNodes.length > 0) {
-      selectedNodes.forEach((node) => {
-        node.remove();
-      });
-      transformer.nodes([]);
-      layer.draw();
-
-      hideMenuSidebar();
-    }
+  if (event.key === "Delete") {
+    deleteNode(selectedNode);
   }
 });
+
+function deleteNode(node) {
+  if (!node) {
+    return;
+  }
+  node.remove();
+  transformer.nodes([]);
+  layer.draw();
+
+  hideMenuSidebar();
+}
+
+// preview panel
+function populatePreviewPanelList() {
+  preview_panel_list.innerHTML = "";
+
+  extractValuesFromText(stage.toJSON()).forEach(
+    ({ default_value, variable_name }) => {
+      const node = `
+        <li>
+            <div class="grid gap-3">
+              <label class="label">${variable_name}</label>
+              <input class="input" type="text" placeholder="${default_value ? default_value : "enter value"}" ${default_value ? "value=" + default_value : ""}>
+              ${default_value ? '<p class="text-muted-foreground text-sm">Default: ' + default_value + "</p>" : ""}
+            </div>
+        </li>
+        `;
+      preview_panel_list.insertAdjacentHTML("beforeend", node);
+    },
+  );
+}
